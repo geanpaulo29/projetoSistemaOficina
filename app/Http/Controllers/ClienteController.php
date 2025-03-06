@@ -31,7 +31,8 @@ class ClienteController extends Controller
         // Exibe o formulário de busca de clientes
     public function search()
     {
-        return view('clientes.search');
+        $clientes = Cliente::all(); // Busca todos os clientes cadastrados
+        return view('clientes.search', compact('clientes'));
     }
 
     // Processa a busca de clientes
@@ -50,4 +51,34 @@ class ClienteController extends Controller
     
         return view('clientes.results', compact('clientes'));
     }
+    //Adiciona edição
+    public function edit($id)
+    {
+        $cliente = Cliente::findOrFail($id);
+        return view('clientes.edit', compact('cliente'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nome' => 'required|string',
+            'endereco' => 'required|string',
+            'telefone' => 'required|string',
+            'cpf' => 'required|string|unique:clientes,cpf,' . $id,
+        ]);
+
+        $cliente = Cliente::findOrFail($id);
+        $cliente->update($request->all());
+
+        return redirect()->route('clientes.search')->with('success', 'Cliente atualizado com sucesso!');
+    }
+
+    public function destroy($id)
+    {
+        $cliente = Cliente::findOrFail($id);
+        $cliente->delete();
+
+        return redirect()->route('clientes.search')->with('success', 'Cliente excluído com sucesso!');
+    }
+    
 }

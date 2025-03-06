@@ -20,6 +20,6 @@ class Servico extends Model
     // Acessar o cliente através do veículo
     public function cliente()
     {
-        return optional($this->veiculo)->clientes->first();
+        return $this->veiculo ? $this->veiculo->cliente : null;
     }
 }

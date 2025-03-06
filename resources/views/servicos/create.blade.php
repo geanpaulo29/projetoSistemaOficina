@@ -29,6 +29,8 @@
                 <a href="{{ route('clientes.search') }}" class="nav-link">Buscar Cliente</a>
                 <a href="{{ route('veiculos.search') }}" class="nav-link">Buscar Veículo</a>
                 <a href="{{ route('servicos.create') }}" class="nav-link">Adicionar Serviço</a>
+                <a href="{{ route('servicos.index') }}" class="nav-link">Lista de Serviços</a>
+
             </div>
 
             <!-- Botão de Logout -->
@@ -59,11 +61,11 @@
         <form action="{{ route('servicos.store') }}" method="POST">
             @csrf
             <div class="mb-3">
-                <label for="cliente_id" class="form-label">Cliente</label>
-                <select class="form-control" id="cliente_id" name="cliente_id" required>
-                    <option value="">Selecione um cliente</option>
-                    @foreach($clientes as $cliente)
-                        <option value="{{ $cliente->id }}">{{ $cliente->nome }}</option>
+                <label for="veiculo_id" class="form-label">Placa do Veículo</label>
+                <select class="form-control" id="veiculo_id" name="veiculo_id" required>
+                    <option value="">Selecione a placa do veículo</option>
+                    @foreach($veiculos as $veiculo)
+                        <option value="{{ $veiculo->id }}">{{ $veiculo->placa }} - {{ $veiculo->modelo }} ({{ $veiculo->cliente->nome }})</option>
                     @endforeach
                 </select>
             </div>

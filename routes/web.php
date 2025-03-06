@@ -10,6 +10,7 @@ use App\Http\Controllers\VeiculoController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ServicoController;
 
+
 // Rotas para busca de clientes
 Route::get('/clientes/search', [ClienteController::class, 'search'])->name('clientes.search');
 Route::get('/clientes/find', [ClienteController::class, 'find'])->name('clientes.find');
@@ -19,20 +20,32 @@ Route::get('/veiculos/search', [VeiculoController::class, 'search'])->name('veic
 Route::get('/veiculos/find', [VeiculoController::class, 'find'])->name('veiculos.find');
 
 // Rotas para serviços
+Route::get('/servicos', [ServicoController::class, 'index'])->name('servicos.index');
 Route::get('/servicos/create', [ServicoController::class, 'create'])->name('servicos.create');
 Route::post('/servicos', [ServicoController::class, 'store'])->name('servicos.store');
-Route::get('/servicos', [ServicoController::class, 'index'])->name('servicos.index');
+Route::get('/servicos/{id}/edit', [ServicoController::class, 'edit'])->name('servicos.edit'); // Rota para edição
+Route::put('/servicos/{id}', [ServicoController::class, 'update'])->name('servicos.update'); // Rota para atualização
+Route::delete('/servicos/{id}', [ServicoController::class, 'destroy'])->name('servicos.destroy'); // Rota para exclusão
 
 // Rotas para Veículos
+// Rotas para veículos
 Route::get('/veiculos', [VeiculoController::class, 'index'])->name('veiculos.index');
 Route::get('/veiculos/create', [VeiculoController::class, 'create'])->name('veiculos.create');
 Route::post('/veiculos', [VeiculoController::class, 'store'])->name('veiculos.store');
 Route::get('/veiculos/search', [VeiculoController::class, 'search'])->name('veiculos.search');
 Route::get('/veiculos/find', [VeiculoController::class, 'find'])->name('veiculos.find');
+Route::get('/veiculos/{id}/edit', [VeiculoController::class, 'edit'])->name('veiculos.edit');
+Route::put('/veiculos/{id}', [VeiculoController::class, 'update'])->name('veiculos.update');
+Route::delete('/veiculos/{id}', [VeiculoController::class, 'destroy'])->name('veiculos.destroy');
 
 // Rotas para Clientes
 Route::get('/clientes/create', [ClienteController::class, 'create'])->name('clientes.create');
 Route::post('/clientes', [ClienteController::class, 'store'])->name('clientes.store');
+// web.php
+
+Route::get('/clientes/{id}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
+Route::put('/clientes/{id}', [ClienteController::class, 'update'])->name('clientes.update');
+Route::delete('/clientes/{id}', [ClienteController::class, 'destroy'])->name('clientes.destroy');
 
 // Redireciona a rota raiz para a página de login
 Route::redirect('/', '/login');

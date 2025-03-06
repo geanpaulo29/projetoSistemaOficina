@@ -29,6 +29,8 @@
                 <a href="{{ route('clientes.search') }}" class="nav-link">Buscar Cliente</a>
                 <a href="{{ route('veiculos.search') }}" class="nav-link">Buscar Veículo</a>
                 <a href="{{ route('servicos.create') }}" class="nav-link">Adicionar Serviço</a>
+                <a href="{{ route('servicos.index') }}" class="nav-link">Lista de Serviços</a>
+
             </div>
 
             <!-- Botão de Logout -->

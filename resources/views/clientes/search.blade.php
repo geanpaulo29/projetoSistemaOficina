@@ -29,6 +29,8 @@
                 <a href="{{ route('clientes.search') }}" class="nav-link">Buscar Cliente</a>
                 <a href="{{ route('veiculos.search') }}" class="nav-link">Buscar Veículo</a>
                 <a href="{{ route('servicos.create') }}" class="nav-link">Adicionar Serviço</a>
+                <a href="{{ route('servicos.index') }}" class="nav-link">Lista de Serviços</a>
+
             </div>
 
             <!-- Botão de Logout -->
@@ -53,6 +55,45 @@
             </div>
             <button type="submit" class="btn btn-primary">Buscar</button>
         </form>
+
+        <!-- Lista de todos os clientes cadastrados -->
+        <h2 class="mt-5 mb-4">Clientes Cadastrados</h2>
+        @if ($clientes->isEmpty())
+            <div class="alert alert-warning">Nenhum cliente cadastrado.</div>
+        @else
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>CPF</th>
+                        <th>Endereço</th>
+                        <th>Telefone</th>
+                        <th>Ações</th> <!-- Coluna para os botões de ação -->
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($clientes as $cliente)
+                        <tr>
+                            <td>{{ $cliente->nome }}</td>
+                            <td>{{ $cliente->cpf }}</td>
+                            <td>{{ $cliente->endereco }}</td>
+                            <td>{{ $cliente->telefone }}</td>
+                            <td>
+                                <!-- Botão de Editar -->
+                                <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn btn-sm btn-warning">Editar</a>
+
+                                <!-- Formulário de Exclusão -->
+                                <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir este cliente?')">Excluir</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

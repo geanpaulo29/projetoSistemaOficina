@@ -29,6 +29,7 @@
                 <a href="{{ route('clientes.search') }}" class="nav-link">Buscar Cliente</a>
                 <a href="{{ route('veiculos.search') }}" class="nav-link">Buscar Veículo</a>
                 <a href="{{ route('servicos.create') }}" class="nav-link">Adicionar Serviço</a>
+                <a href="{{ route('servicos.index') }}" class="nav-link">Lista de Serviços</a>
             </div>
 
             <!-- Botão de Logout -->
@@ -45,10 +46,20 @@
     <div class="container">
         <h1 class="mb-4">Resultados da Busca</h1>
 
+        <!-- Formulário de busca -->
+        <form action="{{ route('veiculos.find') }}" method="GET">
+            <div class="mb-3">
+                <label for="search" class="form-label">Modelo, Placa ou Marca do Veículo</label>
+                <input type="text" class="form-control" id="search" name="search" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+
         <!-- Tabela de resultados -->
         @if ($veiculos->isEmpty())
             <div class="alert alert-warning">Nenhum veículo encontrado.</div>
         @else
+            <h2 class="mt-5 mb-4">Veículos Encontrados</h2>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -57,6 +68,8 @@
                         <th>Marca</th>
                         <th>Cor</th>
                         <th>Ano</th>
+                        <th>Dono</th>
+                        <th>Ações</th> <!-- Coluna para os botões de ação -->
                     </tr>
                 </thead>
                 <tbody>
@@ -67,6 +80,18 @@
                             <td>{{ $veiculo->marca }}</td>
                             <td>{{ $veiculo->cor }}</td>
                             <td>{{ $veiculo->ano }}</td>
+                            <td>{{ optional($veiculo->cliente)->nome ?? 'Cliente não encontrado' }}</td>
+                            <td>
+                                <!-- Botão de Editar -->
+                                <a href="{{ route('veiculos.edit', $veiculo->id) }}" class="btn btn-sm btn-warning">Editar</a>
+
+                                <!-- Formulário de Exclusão -->
+                                <form action="{{ route('veiculos.destroy', $veiculo->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir este veículo?')">Excluir</button>
+                                </form>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

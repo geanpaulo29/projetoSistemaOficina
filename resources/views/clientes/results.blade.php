@@ -29,6 +29,8 @@
                 <a href="{{ route('clientes.search') }}" class="nav-link">Buscar Cliente</a>
                 <a href="{{ route('veiculos.search') }}" class="nav-link">Buscar Veículo</a>
                 <a href="{{ route('servicos.create') }}" class="nav-link">Adicionar Serviço</a>
+                <a href="{{ route('servicos.index') }}" class="nav-link">Lista de Serviços</a>
+
             </div>
 
             <!-- Botão de Logout -->
@@ -41,14 +43,29 @@
         </div>
     </nav>
 
+
+    
     <!-- Conteúdo principal -->
     <div class="container">
+
+    
         <h1 class="mb-4">Resultados da Busca</h1>
+        
+                <!-- Formulário de busca -->
+                <form action="{{ route('clientes.find') }}" method="GET">
+            <div class="mb-3">
+                <label for="search" class="form-label">Nome ou CPF do Cliente</label>
+                <input type="text" class="form-control" id="search" name="search" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
 
         <!-- Tabela de resultados -->
         @if ($clientes->isEmpty())
             <div class="alert alert-warning">Nenhum cliente encontrado.</div>
         @else
+        <h2 class="mt-5 mb-4">Clientes Encontrados</h2>
+
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -56,6 +73,7 @@
                         <th>CPF</th>
                         <th>Endereço</th>
                         <th>Telefone</th>
+                        <th>Ações</th> <!-- Coluna para os botões de ação -->
                     </tr>
                 </thead>
                 <tbody>
@@ -65,6 +83,17 @@
                             <td>{{ $cliente->cpf }}</td>
                             <td>{{ $cliente->endereco }}</td>
                             <td>{{ $cliente->telefone }}</td>
+                            <td>
+                                <!-- Botão de Editar -->
+                                <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn btn-sm btn-warning">Editar</a>
+
+                                <!-- Formulário de Exclusão -->
+                                <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir este cliente?')">Excluir</button>
+                                </form>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

@@ -44,6 +44,7 @@
                     <a href="{{ route('clientes.search') }}" class="nav-link">Buscar Cliente</a>
                     <a href="{{ route('veiculos.search') }}" class="nav-link">Buscar Veículo</a>
                     <a href="{{ route('servicos.create') }}" class="nav-link">Adicionar Serviço</a>
+                    <a href="{{ route('servicos.index') }}" class="nav-link">Lista de Serviços</a>
                 </div>
 
                 <!-- Botão de Logout -->
@@ -81,6 +82,11 @@
         <!-- Botão 5: Adicionar Serviço -->
         <a href="{{ route('servicos.create') }}" class="btn btn-danger btn-custom">
             Adicionar Serviço
+        </a>
+
+        <!-- Botão 6: Lista de Serviços -->
+        <a href="{{ route('servicos.index') }}" class="btn btn-secondary btn-custom">
+            Lista de Serviços
         </a>
     </div>
 

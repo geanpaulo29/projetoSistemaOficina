@@ -29,6 +29,7 @@
                 <a href="{{ route('clientes.search') }}" class="nav-link">Buscar Cliente</a>
                 <a href="{{ route('veiculos.search') }}" class="nav-link">Buscar Veículo</a>
                 <a href="{{ route('servicos.create') }}" class="nav-link">Adicionar Serviço</a>
+                <a href="{{ route('servicos.index') }}" class="nav-link">Lista de Serviços</a>
             </div>
 
             <!-- Botão de Logout -->
@@ -45,25 +46,44 @@
     <div class="container">
         <h1 class="mb-4">Lista de Serviços</h1>
 
+        <!-- Mensagem de sucesso -->
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
         <!-- Tabela de serviços -->
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th>Placa do Veículo</th>
                     <th>Cliente</th>
-                    <th>Veículo</th>
                     <th>Descrição</th>
                     <th>Valor</th>
                     <th>Data do Serviço</th>
+                    <th>Ações</th> <!-- Coluna para os botões de ação -->
                 </tr>
             </thead>
             <tbody>
                 @foreach($servicos as $servico)
                     <tr>
-                        <td>{{ $servico->cliente->nome }}</td>
-                        <td>{{ $servico->veiculo->modelo }} - {{ $servico->veiculo->placa }}</td>
+                        <td>{{ $servico->veiculo->placa }}</td>
+                        <td>{{ $servico->veiculo->cliente->nome ?? 'Cliente não encontrado' }}</td>
                         <td>{{ $servico->descricao }}</td>
                         <td>R$ {{ number_format($servico->valor, 2, ',', '.') }}</td>
                         <td>{{ date('d/m/Y', strtotime($servico->data_servico)) }}</td>
+                        <td>
+                            <!-- Botão de Editar -->
+                            <a href="{{ route('servicos.edit', $servico->id) }}" class="btn btn-sm btn-warning">Editar</a>
+
+                            <!-- Formulário de Exclusão -->
+                            <form action="{{ route('servicos.destroy', $servico->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir este serviço?')">Excluir</button>
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
