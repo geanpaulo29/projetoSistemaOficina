@@ -20,12 +20,15 @@ Route::get('/veiculos/search', [VeiculoController::class, 'search'])->name('veic
 Route::get('/veiculos/find', [VeiculoController::class, 'find'])->name('veiculos.find');
 
 // Rotas para serviços
+// Rotas para serviços
 Route::get('/servicos', [ServicoController::class, 'index'])->name('servicos.index');
 Route::get('/servicos/create', [ServicoController::class, 'create'])->name('servicos.create');
 Route::post('/servicos', [ServicoController::class, 'store'])->name('servicos.store');
-Route::get('/servicos/{id}/edit', [ServicoController::class, 'edit'])->name('servicos.edit'); // Rota para edição
-Route::put('/servicos/{id}', [ServicoController::class, 'update'])->name('servicos.update'); // Rota para atualização
-Route::delete('/servicos/{id}', [ServicoController::class, 'destroy'])->name('servicos.destroy'); // Rota para exclusão
+Route::get('/servicos/search', [ServicoController::class, 'search'])->name('servicos.search');
+Route::get('/servicos/find', [ServicoController::class, 'find'])->name('servicos.find');
+Route::get('/servicos/{id}/edit', [ServicoController::class, 'edit'])->name('servicos.edit');
+Route::put('/servicos/{id}', [ServicoController::class, 'update'])->name('servicos.update');
+Route::delete('/servicos/{id}', [ServicoController::class, 'destroy'])->name('servicos.destroy');
 
 // Rotas para Veículos
 // Rotas para veículos

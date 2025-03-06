@@ -46,33 +46,34 @@
     <div class="container">
         <h1 class="mb-4">Lista de Serviços</h1>
 
-        <!-- Mensagem de sucesso -->
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
+        <!-- Formulário de busca -->
+        <form action="{{ route('servicos.find') }}" method="GET" class="mb-4">
+            <div class="input-group">
+                <input type="text" class="form-control" name="search" placeholder="Pesquisar por placa, nome do veículo ou nome do cliente..." required>
+                <button type="submit" class="btn btn-primary">Buscar</button>
             </div>
-        @endif
+        </form>
 
         <!-- Tabela de serviços -->
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Placa do Veículo</th>
-                    <th>Cliente</th>
+                    <th>Data</th>
+                    <th>Veículo</th>
                     <th>Descrição</th>
+                    <th>Cliente</th>
                     <th>Valor</th>
-                    <th>Data do Serviço</th>
-                    <th>Ações</th> <!-- Coluna para os botões de ação -->
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($servicos as $servico)
                     <tr>
-                        <td>{{ $servico->veiculo->placa }}</td>
-                        <td>{{ $servico->veiculo->cliente->nome ?? 'Cliente não encontrado' }}</td>
-                        <td>{{ $servico->descricao }}</td>
-                        <td>R$ {{ number_format($servico->valor, 2, ',', '.') }}</td>
                         <td>{{ date('d/m/Y', strtotime($servico->data_servico)) }}</td>
+                        <td>{{ $servico->veiculo->modelo }} ({{ $servico->veiculo->placa }})</td>
+                        <td>{{ $servico->descricao }}</td>
+                        <td>{{ $servico->veiculo->cliente->nome }}</td>
+                        <td>R$ {{ number_format($servico->valor, 2, ',', '.') }}</td>
                         <td>
                             <!-- Botão de Editar -->
                             <a href="{{ route('servicos.edit', $servico->id) }}" class="btn btn-sm btn-warning">Editar</a>
@@ -88,6 +89,11 @@
                 @endforeach
             </tbody>
         </table>
+
+        <!-- Links de paginação -->
+        <div class="d-flex justify-content-center">
+            {{ $servicos->links() }}
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
