@@ -18,24 +18,34 @@ class VeiculoController extends Controller
     // Salva o veículo no banco de dados
     public function store(Request $request)
     {
+        // Mensagens de erro personalizadas
+        $messages = [
+            'placa.required' => 'O campo placa é obrigatório.',
+            'placa.unique' => 'Esta placa já está cadastrada.',
+            'ano.min' => 'O ano deve ser maior ou igual a 1900.',
+            'ano.max' => 'O ano deve ser menor ou igual ao ano atual.',
+        ];
+
+        // Validação dos dados
         $request->validate([
             'modelo' => 'required|string',
             'placa' => 'required|string|unique:veiculos',
             'marca' => 'required|string',
             'cor' => 'required|string',
-            'ano' => 'required|integer',
-            'cliente_id' => 'required|exists:clientes,id', // Valida o cliente_id
-        ]);
+            'ano' => 'required|integer|min:1900|max:' . date('Y'),
+            'cliente_id' => 'required|exists:clientes,id',
+        ], $messages);
 
+        // Cria o veículo no banco de dados
         Veiculo::create($request->all());
 
         return redirect()->route('veiculos.index')->with('success', 'Veículo cadastrado com sucesso!');
     }
 
-    // Exibe a lista de veículos
+    // Exibe a lista de veículos com paginação
     public function index()
     {
-        $veiculos = Veiculo::with('cliente')->get(); // Carrega os veículos com seus clientes
+        $veiculos = Veiculo::with('cliente')->paginate(10); // Paginação com 10 itens por página
         return view('veiculos.index', compact('veiculos'));
     }
 
@@ -75,15 +85,25 @@ class VeiculoController extends Controller
     // Atualiza o veículo no banco de dados
     public function update(Request $request, $id)
     {
+        // Mensagens de erro personalizadas
+        $messages = [
+            'placa.required' => 'O campo placa é obrigatório.',
+            'placa.unique' => 'Esta placa já está cadastrada.',
+            'ano.min' => 'O ano deve ser maior ou igual a 1900.',
+            'ano.max' => 'O ano deve ser menor ou igual ao ano atual.',
+        ];
+
+        // Validação dos dados
         $request->validate([
             'modelo' => 'required|string',
             'placa' => 'required|string|unique:veiculos,placa,' . $id, // Ignora a placa do veículo atual
             'marca' => 'required|string',
             'cor' => 'required|string',
-            'ano' => 'required|integer',
-            'cliente_id' => 'required|exists:clientes,id', // Valida o cliente_id
-        ]);
+            'ano' => 'required|integer|min:1900|max:' . date('Y'),
+            'cliente_id' => 'required|exists:clientes,id',
+        ], $messages);
 
+        // Atualiza o veículo no banco de dados
         $veiculo = Veiculo::findOrFail($id);
         $veiculo->update($request->all());
 

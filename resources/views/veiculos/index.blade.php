@@ -13,6 +13,16 @@
         .container {
             margin-top: 80px; /* Espaço para a navbar */
         }
+        .pagination {
+            margin-top: 20px;
+        }
+        .pagination .page-item.active .page-link {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .pagination .page-link {
+            color: #007bff;
+        }
     </style>
 </head>
 <body>
@@ -48,6 +58,7 @@
         <h1 class="mb-4">Lista de Veículos</h1>
 
         <!-- Tabela de veículos -->
+        <!-- Tabela de veículos -->
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -57,6 +68,7 @@
                     <th>Cor</th>
                     <th>Ano</th>
                     <th>Dono</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -67,11 +79,24 @@
                         <td>{{ $veiculo->marca }}</td>
                         <td>{{ $veiculo->cor }}</td>
                         <td>{{ $veiculo->ano }}</td>
-                        <td>{{ optional($veiculo->cliente)->nome }}</td>
+                        <td>{{ optional($veiculo->cliente)->nome ?? 'Cliente não encontrado' }}</td>
+                        <td>
+                            <a href="{{ route('veiculos.edit', $veiculo->id) }}" class="btn btn-sm btn-warning">Editar</a>
+                            <form action="{{ route('veiculos.destroy', $veiculo->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir este veículo?')">Excluir</button>
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+
+        <!-- Links de paginação -->
+        <div class="d-flex justify-content-center">
+            {{ $veiculos->links() }}
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
