@@ -19,6 +19,24 @@
         .sortable:hover {
             text-decoration: underline;
         }
+        .filter-active {
+            background-color: #e9ecef;
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin: 5px 0;
+            display: inline-flex;
+            align-items: center;
+        }
+        .filter-active button {
+            margin-left: 10px;
+            border: none;
+            background: none;
+            color: #dc3545;
+            cursor: pointer;
+        }
+        .filter-active button:hover {
+            color: #a71d2a;
+        }
     </style>
 </head>
 <body>
@@ -46,6 +64,31 @@
     <!-- Conteúdo principal -->
     <div class="container">
         <h1 class="mb-4">Lista de Serviços</h1>
+
+        <!-- Feedback dos filtros ativos -->
+        @if (request()->filled('search') || request()->filled('data_inicio') || request()->filled('valor_minimo'))
+            <div class="mb-4">
+                <h5>Filtros Ativos:</h5>
+                @if (request()->filled('search'))
+                    <div class="filter-active">
+                        <strong>Termo de busca:</strong> {{ request('search') }}
+                        <button onclick="removeFilter('search')">×</button>
+                    </div>
+                @endif
+                @if (request()->filled('data_inicio') && request()->filled('data_fim'))
+                    <div class="filter-active">
+                        <strong>Período:</strong> {{ request('data_inicio') }} até {{ request('data_fim') }}
+                        <button onclick="removeFilter('data_inicio')">×</button>
+                    </div>
+                @endif
+                @if (request()->filled('valor_minimo'))
+                    <div class="filter-active">
+                        <strong>Valor mínimo:</strong> R$ {{ number_format(request('valor_minimo'), 2, ',', '.') }}
+                        <button onclick="removeFilter('valor_minimo')">×</button>
+                    </div>
+                @endif
+            </div>
+        @endif
 
         <!-- Formulário de busca e filtros avançados -->
         <form action="{{ route('servicos.find') }}" method="GET" class="mb-4">
@@ -111,13 +154,27 @@
         </div>
     </div>
 
-    <!-- Script para ordenação -->
+    <!-- Script para ordenação e remoção de filtros -->
     <script>
+        // Ordenação
         function sortTable(column) {
             const url = new URL(window.location.href);
             const direction = url.searchParams.get('direcao') === 'asc' ? 'desc' : 'asc';
             url.searchParams.set('ordenar_por', column);
             url.searchParams.set('direcao', direction);
+            window.location.href = url.toString();
+        }
+
+        // Remoção de filtros
+        function removeFilter(filter) {
+            const url = new URL(window.location.href);
+            url.searchParams.delete(filter);
+
+            // Se o filtro for de data, remova ambos os campos (data_inicio e data_fim)
+            if (filter === 'data_inicio') {
+                url.searchParams.delete('data_fim');
+            }
+
             window.location.href = url.toString();
         }
     </script>

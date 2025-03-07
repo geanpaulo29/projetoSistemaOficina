@@ -39,7 +39,7 @@ class ServicoController extends Controller
         $query = Servico::with(['veiculo.cliente']);
     
         // Filtro por data (período)
-        if ($request->has('data_inicio') && $request->has('data_fim')) {
+        if ($request->filled('data_inicio') && $request->filled('data_fim')) {
             $query->whereBetween('data_servico', [
                 $request->input('data_inicio'),
                 $request->input('data_fim')
@@ -47,7 +47,7 @@ class ServicoController extends Controller
         }
     
         // Filtro por valor mínimo
-        if ($request->has('valor_minimo')) {
+        if ($request->filled('valor_minimo')) {
             $query->where('valor', '>=', $request->input('valor_minimo'));
         }
     
@@ -63,22 +63,14 @@ class ServicoController extends Controller
     
         return view('servicos.index', compact('servicos'));
     }
-
-    // Exibe o formulário de busca de serviços
-    public function search()
-    {
-        $servicos = Servico::with(['veiculo.cliente'])->get(); // Carrega todos os serviços para exibir na página de busca
-        return view('servicos.search', compact('servicos'));
-    }
-
-    // Processa a busca de serviços
+    
     public function find(Request $request)
     {
         // Filtros
         $query = Servico::with(['veiculo.cliente']);
     
         // Filtro por termo de busca
-        if ($request->has('search')) {
+        if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where('descricao', 'like', "%$search%")
                   ->orWhere('valor', 'like', "%$search%")
@@ -93,7 +85,7 @@ class ServicoController extends Controller
         }
     
         // Filtro por data (período)
-        if ($request->has('data_inicio') && $request->has('data_fim')) {
+        if ($request->filled('data_inicio') && $request->filled('data_fim')) {
             $query->whereBetween('data_servico', [
                 $request->input('data_inicio'),
                 $request->input('data_fim')
@@ -101,7 +93,7 @@ class ServicoController extends Controller
         }
     
         // Filtro por valor mínimo
-        if ($request->has('valor_minimo')) {
+        if ($request->filled('valor_minimo')) {
             $query->where('valor', '>=', $request->input('valor_minimo'));
         }
     
@@ -116,6 +108,14 @@ class ServicoController extends Controller
         $servicos = $query->paginate(10);
     
         return view('servicos.index', compact('servicos'));
+    }
+
+
+    // Exibe o formulário de busca de serviços
+    public function search()
+    {
+        $servicos = Servico::with(['veiculo.cliente'])->get(); // Carrega todos os serviços para exibir na página de busca
+        return view('servicos.search', compact('servicos'));
     }
 
     // Exibe o formulário de edição de serviço
