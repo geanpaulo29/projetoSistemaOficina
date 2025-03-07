@@ -13,29 +13,52 @@ class ClienteController extends Controller
         return view('clientes.create');
     }
 
-        // Exibe o formulário de busca de clientes
+    // Exibe o formulário de busca de clientes
     public function search()
     {
-        $clientes = Cliente::all(); // Busca todos os clientes cadastrados
+        $clientes = Cliente::paginate(10); // Paginação com 10 itens por página
         return view('clientes.search', compact('clientes'));
     }
 
     // Processa a busca de clientes
     public function find(Request $request)
     {
-        $request->validate([
-            'search' => 'required|string',
-        ]);
+        $query = Cliente::query();
     
-        $search = $request->input('search');
+        // Filtro por termo de busca geral
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('nome', 'like', "%$search%")
+                  ->orWhere('cpf', 'like', "%$search%")
+                  ->orWhere('telefone', 'like', "%$search%")
+                  ->orWhere('cidade', 'like', "%$search%")
+                  ->orWhere('bairro', 'like', "%$search%")
+                  ->orWhere('rua', 'like', "%$search%")
+                  ->orWhere('numero', 'like', "%$search%");
+            });
+        }
     
-        // Busca clientes pelo nome ou CPF
-        $clientes = Cliente::where('nome', 'like', "%$search%")
-            ->orWhere('cpf', 'like', "%$search%")
-            ->get();
+        // Filtros avançados
+        if ($request->filled('cidade')) {
+            $query->where('cidade', 'like', "%{$request->input('cidade')}%");
+        }
+        if ($request->filled('bairro')) {
+            $query->where('bairro', 'like', "%{$request->input('bairro')}%");
+        }
+        if ($request->filled('rua')) {
+            $query->where('rua', 'like', "%{$request->input('rua')}%");
+        }
+        if ($request->filled('numero')) {
+            $query->where('numero', 'like', "%{$request->input('numero')}%");
+        }
     
-        return view('clientes.results', compact('clientes'));
+        // Paginação
+        $clientes = $query->paginate(10);
+    
+        return view('clientes.search', compact('clientes'));
     }
+
     //Adiciona edição
     public function edit($id)
     {
