@@ -33,9 +33,34 @@ class ServicoController extends Controller
     }
 
     // Lista todos os serviços com paginação
-    public function index()
+    public function index(Request $request)
     {
-        $servicos = Servico::with(['veiculo.cliente'])->paginate(10); // Paginação com 10 itens por página
+        // Filtros
+        $query = Servico::with(['veiculo.cliente']);
+    
+        // Filtro por data (período)
+        if ($request->has('data_inicio') && $request->has('data_fim')) {
+            $query->whereBetween('data_servico', [
+                $request->input('data_inicio'),
+                $request->input('data_fim')
+            ]);
+        }
+    
+        // Filtro por valor mínimo
+        if ($request->has('valor_minimo')) {
+            $query->where('valor', '>=', $request->input('valor_minimo'));
+        }
+    
+        // Ordenação
+        if ($request->has('ordenar_por') && $request->has('direcao')) {
+            $query->orderBy($request->input('ordenar_por'), $request->input('direcao'));
+        } else {
+            $query->orderBy('data_servico', 'desc'); // Ordenação padrão por data (mais recente primeiro)
+        }
+    
+        // Paginação
+        $servicos = $query->paginate(10);
+    
         return view('servicos.index', compact('servicos'));
     }
 
@@ -49,24 +74,46 @@ class ServicoController extends Controller
     // Processa a busca de serviços
     public function find(Request $request)
     {
-        $request->validate([
-            'search' => 'required|string',
-        ]);
+        // Filtros
+        $query = Servico::with(['veiculo.cliente']);
     
-        $search = $request->input('search');
+        // Filtro por termo de busca
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where('descricao', 'like', "%$search%")
+                  ->orWhere('valor', 'like', "%$search%")
+                  ->orWhere('data_servico', 'like', "%$search%")
+                  ->orWhereHas('veiculo', function ($q) use ($search) {
+                      $q->where('placa', 'like', "%$search%")
+                        ->orWhere('modelo', 'like', "%$search%");
+                  })
+                  ->orWhereHas('veiculo.cliente', function ($q) use ($search) {
+                      $q->where('nome', 'like', "%$search%");
+                  });
+        }
     
-        // Busca serviços pela descrição, valor, data, placa, nome do veículo ou nome do cliente
-        $servicos = Servico::where('descricao', 'like', "%$search%")
-            ->orWhere('valor', 'like', "%$search%")
-            ->orWhere('data_servico', 'like', "%$search%")
-            ->orWhereHas('veiculo', function ($query) use ($search) {
-                $query->where('placa', 'like', "%$search%")
-                      ->orWhere('modelo', 'like', "%$search%");
-            })
-            ->orWhereHas('veiculo.cliente', function ($query) use ($search) {
-                $query->where('nome', 'like', "%$search%");
-            })
-            ->paginate(10); // Paginação com 10 itens por página
+        // Filtro por data (período)
+        if ($request->has('data_inicio') && $request->has('data_fim')) {
+            $query->whereBetween('data_servico', [
+                $request->input('data_inicio'),
+                $request->input('data_fim')
+            ]);
+        }
+    
+        // Filtro por valor mínimo
+        if ($request->has('valor_minimo')) {
+            $query->where('valor', '>=', $request->input('valor_minimo'));
+        }
+    
+        // Ordenação
+        if ($request->has('ordenar_por') && $request->has('direcao')) {
+            $query->orderBy($request->input('ordenar_por'), $request->input('direcao'));
+        } else {
+            $query->orderBy('data_servico', 'desc'); // Ordenação padrão por data (mais recente primeiro)
+        }
+    
+        // Paginação
+        $servicos = $query->paginate(10);
     
         return view('servicos.index', compact('servicos'));
     }

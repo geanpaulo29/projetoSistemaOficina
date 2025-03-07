@@ -7,11 +7,17 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .navbar-custom {
-            background-color: #f8f9fa; /* Cor de fundo da navbar */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .container {
-            margin-top: 80px; /* Espaço para a navbar */
+            margin-top: 80px;
+        }
+        .sortable {
+            cursor: pointer;
+        }
+        .sortable:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -19,10 +25,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light navbar-custom fixed-top">
         <div class="container-fluid">
-            <!-- Botão para voltar à home -->
             <a class="navbar-brand" href="{{ route('home') }}">Home</a>
-
-            <!-- Botões da Home -->
             <div class="navbar-nav me-auto">
                 <a href="{{ route('veiculos.create') }}" class="nav-link">Cadastrar Veículo</a>
                 <a href="{{ route('clientes.create') }}" class="nav-link">Cadastrar Cliente</a>
@@ -31,8 +34,6 @@
                 <a href="{{ route('servicos.create') }}" class="nav-link">Adicionar Serviço</a>
                 <a href="{{ route('servicos.index') }}" class="nav-link">Lista de Serviços</a>
             </div>
-
-            <!-- Botão de Logout -->
             <div class="ms-auto">
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
@@ -46,11 +47,28 @@
     <div class="container">
         <h1 class="mb-4">Lista de Serviços</h1>
 
-        <!-- Formulário de busca -->
+        <!-- Formulário de busca e filtros avançados -->
         <form action="{{ route('servicos.find') }}" method="GET" class="mb-4">
-            <div class="input-group">
-                <input type="text" class="form-control" name="search" placeholder="Pesquisar por placa, nome do veículo ou nome do cliente..." required>
-                <button type="submit" class="btn btn-primary">Buscar</button>
+            <div class="row g-3">
+                <!-- Campo de busca -->
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="search" placeholder="Pesquisar por placa, nome do veículo ou nome do cliente..." value="{{ request('search') }}">
+                </div>
+                <!-- Filtro por data -->
+                <div class="col-md-3">
+                    <input type="date" class="form-control" name="data_inicio" placeholder="Data inicial" value="{{ request('data_inicio') }}">
+                </div>
+                <div class="col-md-3">
+                    <input type="date" class="form-control" name="data_fim" placeholder="Data final" value="{{ request('data_fim') }}">
+                </div>
+                <!-- Filtro por valor mínimo -->
+                <div class="col-md-2">
+                    <input type="number" class="form-control" name="valor_minimo" placeholder="Valor mínimo" value="{{ request('valor_minimo') }}">
+                </div>
+                <!-- Botão de busca -->
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Buscar</button>
+                </div>
             </div>
         </form>
 
@@ -58,11 +76,11 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Data</th>
+                    <th class="sortable" onclick="sortTable('data_servico')">Data</th>
                     <th>Veículo</th>
                     <th>Descrição</th>
                     <th>Cliente</th>
-                    <th>Valor</th>
+                    <th class="sortable" onclick="sortTable('valor')">Valor</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -75,10 +93,7 @@
                         <td>{{ $servico->veiculo->cliente->nome }}</td>
                         <td>R$ {{ number_format($servico->valor, 2, ',', '.') }}</td>
                         <td>
-                            <!-- Botão de Editar -->
                             <a href="{{ route('servicos.edit', $servico->id) }}" class="btn btn-sm btn-warning">Editar</a>
-
-                            <!-- Formulário de Exclusão -->
                             <form action="{{ route('servicos.destroy', $servico->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
@@ -95,6 +110,17 @@
             {{ $servicos->links() }}
         </div>
     </div>
+
+    <!-- Script para ordenação -->
+    <script>
+        function sortTable(column) {
+            const url = new URL(window.location.href);
+            const direction = url.searchParams.get('direcao') === 'asc' ? 'desc' : 'asc';
+            url.searchParams.set('ordenar_por', column);
+            url.searchParams.set('direcao', direction);
+            window.location.href = url.toString();
+        }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
