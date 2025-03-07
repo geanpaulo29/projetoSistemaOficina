@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('clientes', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
-            $table->string('endereco');
             $table->string('telefone');
             $table->string('cpf')->unique();
+            $table->string('cidade'); // Novo campo
+            $table->string('bairro'); // Novo campo
+            $table->string('rua'); // Novo campo
+            $table->string('numero'); // Novo campo
             $table->timestamps();
         });
     }

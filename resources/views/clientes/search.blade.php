@@ -30,7 +30,6 @@
                 <a href="{{ route('veiculos.search') }}" class="nav-link">Buscar Veículo</a>
                 <a href="{{ route('servicos.create') }}" class="nav-link">Adicionar Serviço</a>
                 <a href="{{ route('servicos.index') }}" class="nav-link">Lista de Serviços</a>
-
             </div>
 
             <!-- Botão de Logout -->
@@ -50,7 +49,7 @@
         <!-- Formulário de busca -->
         <form action="{{ route('clientes.find') }}" method="GET">
             <div class="mb-3">
-                <label for="search" class="form-label">Nome ou CPF do Cliente</label>
+                <label for="search" class="form-label"> Nome ou CPF do Cliente </label>
                 <input type="text" class="form-control" id="search" name="search" required>
             </div>
             <button type="submit" class="btn btn-primary">Buscar</button>
@@ -66,9 +65,12 @@
                     <tr>
                         <th>Nome</th>
                         <th>CPF</th>
-                        <th>Endereço</th>
                         <th>Telefone</th>
-                        <th>Ações</th> <!-- Coluna para os botões de ação -->
+                        <th>Cidade</th>
+                        <th>Bairro</th>
+                        <th>Rua</th>
+                        <th>Número</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -76,8 +78,11 @@
                         <tr>
                             <td>{{ $cliente->nome }}</td>
                             <td>{{ $cliente->cpf }}</td>
-                            <td>{{ $cliente->endereco }}</td>
                             <td>{{ $cliente->telefone }}</td>
+                            <td>{{ $cliente->cidade }}</td>
+                            <td>{{ $cliente->bairro }}</td>
+                            <td>{{ $cliente->rua }}</td>
+                            <td>{{ $cliente->numero }}</td>
                             <td>
                                 <!-- Botão de Editar -->
                                 <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn btn-sm btn-warning">Editar</a>

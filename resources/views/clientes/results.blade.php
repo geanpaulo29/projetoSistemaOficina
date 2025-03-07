@@ -71,9 +71,12 @@
                     <tr>
                         <th>Nome</th>
                         <th>CPF</th>
-                        <th>Endereço</th>
                         <th>Telefone</th>
-                        <th>Ações</th> <!-- Coluna para os botões de ação -->
+                        <th>Cidade</th>
+                        <th>Bairro</th>
+                        <th>Rua</th>
+                        <th>Número</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -81,13 +84,13 @@
                         <tr>
                             <td>{{ $cliente->nome }}</td>
                             <td>{{ $cliente->cpf }}</td>
-                            <td>{{ $cliente->endereco }}</td>
                             <td>{{ $cliente->telefone }}</td>
+                            <td>{{ $cliente->cidade }}</td>
+                            <td>{{ $cliente->bairro }}</td>
+                            <td>{{ $cliente->rua }}</td>
+                            <td>{{ $cliente->numero }}</td>
                             <td>
-                                <!-- Botão de Editar -->
                                 <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn btn-sm btn-warning">Editar</a>
-
-                                <!-- Formulário de Exclusão -->
                                 <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')

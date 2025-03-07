@@ -13,21 +13,6 @@ class ClienteController extends Controller
         return view('clientes.create');
     }
 
-    // Salva o cliente no banco de dados
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nome' => 'required|string',
-            'endereco' => 'required|string',
-            'telefone' => 'required|string',
-            'cpf' => 'required|string|unique:clientes',
-        ]);
-
-        Cliente::create($request->all());
-
-        return redirect()->route('home')->with('success', 'Cliente cadastrado com sucesso!');
-    }
-
         // Exibe o formulário de busca de clientes
     public function search()
     {
@@ -58,18 +43,39 @@ class ClienteController extends Controller
         return view('clientes.edit', compact('cliente'));
     }
 
+    // Salva o cliente no banco de dados
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nome' => 'required|string',
+            'telefone' => 'required|string',
+            'cpf' => 'required|string|unique:clientes',
+            'cidade' => 'required|string',
+            'bairro' => 'required|string',
+            'rua' => 'required|string',
+            'numero' => 'required|string',
+        ]);
+    
+        Cliente::create($request->all());
+    
+        return redirect()->route('clientes.search')->with('success', 'Cliente cadastrado com sucesso!');
+    }
+    
     public function update(Request $request, $id)
     {
         $request->validate([
             'nome' => 'required|string',
-            'endereco' => 'required|string',
             'telefone' => 'required|string',
             'cpf' => 'required|string|unique:clientes,cpf,' . $id,
+            'cidade' => 'required|string',
+            'bairro' => 'required|string',
+            'rua' => 'required|string',
+            'numero' => 'required|string',
         ]);
-
+    
         $cliente = Cliente::findOrFail($id);
         $cliente->update($request->all());
-
+    
         return redirect()->route('clientes.search')->with('success', 'Cliente atualizado com sucesso!');
     }
 

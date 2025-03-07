@@ -11,9 +11,12 @@ class Cliente extends Model
 
     protected $fillable = [
         'nome',
-        'endereco',
         'telefone',
         'cpf',
+        'cidade',
+        'bairro',
+        'rua',
+        'numero',
     ];
 
     // Relacionamento com Veículos
