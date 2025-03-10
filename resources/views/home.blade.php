@@ -10,7 +10,7 @@
         </a>
 
         <!-- Botão 4: Buscar Veículo -->
-        <a href="{{ route('veiculos.search') }}" class="btn btn-primary btn-custom">
+        <a href="{{ route('veiculos.index') }}" class="btn btn-primary btn-custom">
             Buscar Veículo
         </a>
 
@@ -20,7 +20,7 @@
         </a>
 
         <!-- Botão 3: Buscar Cliente -->
-        <a href="{{ route('clientes.search') }}" class="btn btn-warning btn-custom">
+        <a href="{{ route('clientes.index') }}" class="btn btn-warning btn-custom">
             Buscar Cliente
         </a>
 

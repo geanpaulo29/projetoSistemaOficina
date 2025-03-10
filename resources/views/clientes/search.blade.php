@@ -1,45 +1,47 @@
-@extends('layouts.app') <!-- Estende o layout principal -->
+@extends('layouts.app')
 
-@section('title', 'Buscar Cliente') <!-- Define o título da página -->
+@section('title', 'Buscar Clientes')
 
-@section('content') <!-- Início da seção de conteúdo -->
+@section('content')
     <div class="container">
-        <h1 class="mb-4">Buscar Cliente</h1>
+        <h1 class="mb-4">Buscar Clientes</h1>
 
-        <!-- Feedback dos filtros ativos -->
+        <!-- Filtros aplicados -->
         @if (request()->filled('search') || request()->filled('cidade') || request()->filled('bairro') || request()->filled('rua') || request()->filled('numero'))
             <div class="mb-4">
                 <h5>Filtros Ativos:</h5>
-                @if (request()->filled('search'))
-                    <div class="filter-active">
-                        <strong>Termo de busca:</strong> {{ request('search') }}
-                        <button onclick="removeFilter('search')">×</button>
-                    </div>
-                @endif
-                @if (request()->filled('cidade'))
-                    <div class="filter-active">
-                        <strong>Cidade:</strong> {{ request('cidade') }}
-                        <button onclick="removeFilter('cidade')">×</button>
-                    </div>
-                @endif
-                @if (request()->filled('bairro'))
-                    <div class="filter-active">
-                        <strong>Bairro:</strong> {{ request('bairro') }}
-                        <button onclick="removeFilter('bairro')">×</button>
-                    </div>
-                @endif
-                @if (request()->filled('rua'))
-                    <div class="filter-active">
-                        <strong>Rua:</strong> {{ request('rua') }}
-                        <button onclick="removeFilter('rua')">×</button>
-                    </div>
-                @endif
-                @if (request()->filled('numero'))
-                    <div class="filter-active">
-                        <strong>Número:</strong> {{ request('numero') }}
-                        <button onclick="removeFilter('numero')">×</button>
-                    </div>
-                @endif
+                <div class="d-flex flex-wrap gap-2">
+                    @if (request()->filled('search'))
+                        <div class="filter-active">
+                            <strong>Termo de busca:</strong> {{ request('search') }}
+                            <button onclick="removeFilter('search')" class="btn btn-sm btn-danger">×</button>
+                        </div>
+                    @endif
+                    @if (request()->filled('cidade'))
+                        <div class="filter-active">
+                            <strong>Cidade:</strong> {{ request('cidade') }}
+                            <button onclick="removeFilter('cidade')" class="btn btn-sm btn-danger">×</button>
+                        </div>
+                    @endif
+                    @if (request()->filled('bairro'))
+                        <div class="filter-active">
+                            <strong>Bairro:</strong> {{ request('bairro') }}
+                            <button onclick="removeFilter('bairro')" class="btn btn-sm btn-danger">×</button>
+                        </div>
+                    @endif
+                    @if (request()->filled('rua'))
+                        <div class="filter-active">
+                            <strong>Rua:</strong> {{ request('rua') }}
+                            <button onclick="removeFilter('rua')" class="btn btn-sm btn-danger">×</button>
+                        </div>
+                    @endif
+                    @if (request()->filled('numero'))
+                        <div class="filter-active">
+                            <strong>Número:</strong> {{ request('numero') }}
+                            <button onclick="removeFilter('numero')" class="btn btn-sm btn-danger">×</button>
+                        </div>
+                    @endif
+                </div>
             </div>
         @endif
 
@@ -48,7 +50,7 @@
             <div class="row g-3">
                 <!-- Campo de busca geral -->
                 <div class="col-md-4">
-                    <input type="text" class="form-control" name="search" placeholder="Pesquisar por nome, CPF, telefone..." value="{{ request('search') }}">
+                    <input type="text" class="form-control" name="search" placeholder="Pesquisar por nome, CPF ou telefone..." value="{{ request('search') }}">
                 </div>
                 <!-- Filtro por cidade -->
                 <div class="col-md-2">
@@ -73,11 +75,11 @@
             </div>
         </form>
 
-        <!-- Lista de todos os clientes cadastrados -->
-        <h2 class="mt-5 mb-4">Clientes Cadastrados</h2>
+        <!-- Resultados da busca -->
         @if ($clientes->isEmpty())
             <div class="alert alert-warning">Nenhum cliente encontrado.</div>
         @else
+            <h2 class="mt-5 mb-4">Resultados da Busca</h2>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -114,11 +116,6 @@
                 </tbody>
             </table>
         @endif
-
-        <!-- Links de paginação -->
-        <div class="d-flex justify-content-center">
-            {{ $clientes->links() }}
-        </div>
     </div>
 
     <!-- Script para remoção de filtros -->
@@ -129,4 +126,23 @@
             window.location.href = url.toString();
         }
     </script>
-@endsection <!-- Fim da seção de conteúdo -->
+
+    <!-- Estilo para os filtros ativos -->
+    <style>
+        .filter-active {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background-color: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .filter-active button {
+            padding: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+@endsection

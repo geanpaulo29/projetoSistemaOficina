@@ -13,30 +13,17 @@ use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\OrdemServicoController;
 use App\Http\Controllers\ConfiguracaoController;
 
-
-
-
-// Rotas para busca de clientes
+// Rotas para Clientes
+Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
+Route::get('/clientes/create', [ClienteController::class, 'create'])->name('clientes.create');
+Route::post('/clientes', [ClienteController::class, 'store'])->name('clientes.store');
 Route::get('/clientes/search', [ClienteController::class, 'search'])->name('clientes.search');
 Route::get('/clientes/find', [ClienteController::class, 'find'])->name('clientes.find');
-
-// Rotas para busca de veículos
-Route::get('/veiculos/search', [VeiculoController::class, 'search'])->name('veiculos.search');
-Route::get('/veiculos/find', [VeiculoController::class, 'find'])->name('veiculos.find');
-
-// Rotas para serviços
-// Rotas para serviços
-Route::get('/servicos', [ServicoController::class, 'index'])->name('servicos.index');
-Route::get('/servicos/create', [ServicoController::class, 'create'])->name('servicos.create');
-Route::post('/servicos', [ServicoController::class, 'store'])->name('servicos.store');
-Route::get('/servicos/search', [ServicoController::class, 'search'])->name('servicos.search');
-Route::get('/servicos/find', [ServicoController::class, 'find'])->name('servicos.find');
-Route::get('/servicos/{id}/edit', [ServicoController::class, 'edit'])->name('servicos.edit');
-Route::put('/servicos/{id}', [ServicoController::class, 'update'])->name('servicos.update');
-Route::delete('/servicos/{id}', [ServicoController::class, 'destroy'])->name('servicos.destroy');
+Route::get('/clientes/{id}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
+Route::put('/clientes/{id}', [ClienteController::class, 'update'])->name('clientes.update');
+Route::delete('/clientes/{id}', [ClienteController::class, 'destroy'])->name('clientes.destroy');
 
 // Rotas para Veículos
-// Rotas para veículos
 Route::get('/veiculos', [VeiculoController::class, 'index'])->name('veiculos.index');
 Route::get('/veiculos/create', [VeiculoController::class, 'create'])->name('veiculos.create');
 Route::post('/veiculos', [VeiculoController::class, 'store'])->name('veiculos.store');
@@ -46,23 +33,30 @@ Route::get('/veiculos/{id}/edit', [VeiculoController::class, 'edit'])->name('vei
 Route::put('/veiculos/{id}', [VeiculoController::class, 'update'])->name('veiculos.update');
 Route::delete('/veiculos/{id}', [VeiculoController::class, 'destroy'])->name('veiculos.destroy');
 
-// Rotas para Clientes
-Route::get('/clientes/create', [ClienteController::class, 'create'])->name('clientes.create');
-Route::post('/clientes', [ClienteController::class, 'store'])->name('clientes.store');
-// web.php
+// Rotas para Serviços
+Route::get('/servicos', [ServicoController::class, 'index'])->name('servicos.index');
+Route::get('/servicos/create', [ServicoController::class, 'create'])->name('servicos.create');
+Route::post('/servicos', [ServicoController::class, 'store'])->name('servicos.store');
+Route::get('/servicos/search', [ServicoController::class, 'search'])->name('servicos.search');
+Route::get('/servicos/find', [ServicoController::class, 'find'])->name('servicos.find');
+Route::get('/servicos/{id}/edit', [ServicoController::class, 'edit'])->name('servicos.edit');
+Route::put('/servicos/{id}', [ServicoController::class, 'update'])->name('servicos.update');
+Route::delete('/servicos/{id}', [ServicoController::class, 'destroy'])->name('servicos.destroy');
+Route::get('/ordem-servico/{id}', [ServicoController::class, 'gerarOrdemServico'])->name('ordem-servico.show');
 
-Route::get('/clientes/{id}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
-Route::put('/clientes/{id}', [ClienteController::class, 'update'])->name('clientes.update');
-Route::delete('/clientes/{id}', [ClienteController::class, 'destroy'])->name('clientes.destroy');
+// Rotas para Relatórios
+Route::get('/relatorios/servicos', [RelatorioController::class, 'servicos'])->name('relatorios.servicos');
+Route::get('/relatorios/clientes', [RelatorioController::class, 'clientes'])->name('relatorios.clientes');
+Route::get('/relatorios/faturamento', [RelatorioController::class, 'faturamento'])->name('relatorios.faturamento');
 
-// Redireciona a rota raiz para a página de login
+// Rotas para Configurações
+Route::get('/configuracoes', [ConfiguracaoController::class, 'edit'])->name('configuracoes.edit');
+Route::put('/configuracoes', [ConfiguracaoController::class, 'update'])->name('configuracoes.update');
+
+// Rotas de Autenticação
 Route::redirect('/', '/login');
-
-// Página inicial (após o login)
 Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('auth');
-Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-// Rotas de Login e Registro (acessíveis apenas para usuários não autenticados)
 Route::middleware('guest')->group(function () {
     Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('login', [LoginController::class, 'login']);
@@ -70,24 +64,9 @@ Route::middleware('guest')->group(function () {
     Route::post('register', [RegisterController::class, 'register']);
 });
 
-// Rota de logout
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
-// Rota de recuperação de senha
 Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
-
-// Rotas para relatórios
-Route::get('/relatorios/servicos', [RelatorioController::class, 'servicos'])->name('relatorios.servicos');
-Route::get('/relatorios/clientes', [RelatorioController::class, 'clientes'])->name('relatorios.clientes');
-Route::get('/relatorios/faturamento', [RelatorioController::class, 'faturamento'])->name('relatorios.faturamento');
-
-// Rotas para configuracoes
-Route::get('/configuracoes', [ConfiguracaoController::class, 'edit'])->name('configuracoes.edit');
-Route::put('/configuracoes', [ConfiguracaoController::class, 'update'])->name('configuracoes.update');
-
-//Rota para ordem de servico
-Route::get('/ordem-servico/{id}', [OrdemServicoController::class, 'show'])->name('ordem-servico.show');
-Route::get('/ordem-servico/{id}', [ServicoController::class, 'gerarOrdemServico'])->name('ordem-servico.show');

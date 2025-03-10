@@ -1,57 +1,59 @@
-@extends('layouts.app') <!-- Estende o layout principal -->
+@extends('layouts.app')
 
-@section('title', 'Buscar Veículo') <!-- Define o título da página -->
+@section('title', 'Buscar Veículos')
 
-@section('content') <!-- Início da seção de conteúdo -->
+@section('content')
     <div class="container">
-        <h1 class="mb-4">Buscar Veículo</h1>
+        <h1 class="mb-4">Buscar Veículos</h1>
 
-        <!-- Feedback dos filtros ativos -->
+        <!-- Filtros aplicados -->
         @if (request()->filled('search') || request()->filled('modelo') || request()->filled('placa') || request()->filled('marca') || request()->filled('cor') || request()->filled('ano') || request()->filled('cliente_id'))
             <div class="mb-4">
                 <h5>Filtros Ativos:</h5>
-                @if (request()->filled('search'))
-                    <div class="filter-active">
-                        <strong>Termo de busca:</strong> {{ request('search') }}
-                        <button onclick="removeFilter('search')">×</button>
-                    </div>
-                @endif
-                @if (request()->filled('modelo'))
-                    <div class="filter-active">
-                        <strong>Modelo:</strong> {{ request('modelo') }}
-                        <button onclick="removeFilter('modelo')">×</button>
-                    </div>
-                @endif
-                @if (request()->filled('placa'))
-                    <div class="filter-active">
-                        <strong>Placa:</strong> {{ request('placa') }}
-                        <button onclick="removeFilter('placa')">×</button>
-                    </div>
-                @endif
-                @if (request()->filled('marca'))
-                    <div class="filter-active">
-                        <strong>Marca:</strong> {{ request('marca') }}
-                        <button onclick="removeFilter('marca')">×</button>
-                    </div>
-                @endif
-                @if (request()->filled('cor'))
-                    <div class="filter-active">
-                        <strong>Cor:</strong> {{ request('cor') }}
-                        <button onclick="removeFilter('cor')">×</button>
-                    </div>
-                @endif
-                @if (request()->filled('ano'))
-                    <div class="filter-active">
-                        <strong>Ano:</strong> {{ request('ano') }}
-                        <button onclick="removeFilter('ano')">×</button>
-                    </div>
-                @endif
-                @if (request()->filled('cliente_id'))
-                    <div class="filter-active">
-                        <strong>Cliente:</strong> {{ $clienteSelecionado->nome ?? 'Cliente não encontrado' }}
-                        <button onclick="removeFilter('cliente_id')">×</button>
-                    </div>
-                @endif
+                <div class="d-flex flex-wrap gap-2">
+                    @if (request()->filled('search'))
+                        <div class="filter-active">
+                            <strong>Termo de busca:</strong> {{ request('search') }}
+                            <button onclick="removeFilter('search')" class="btn btn-sm btn-danger">×</button>
+                        </div>
+                    @endif
+                    @if (request()->filled('modelo'))
+                        <div class="filter-active">
+                            <strong>Modelo:</strong> {{ request('modelo') }}
+                            <button onclick="removeFilter('modelo')" class="btn btn-sm btn-danger">×</button>
+                        </div>
+                    @endif
+                    @if (request()->filled('placa'))
+                        <div class="filter-active">
+                            <strong>Placa:</strong> {{ request('placa') }}
+                            <button onclick="removeFilter('placa')" class="btn btn-sm btn-danger">×</button>
+                        </div>
+                    @endif
+                    @if (request()->filled('marca'))
+                        <div class="filter-active">
+                            <strong>Marca:</strong> {{ request('marca') }}
+                            <button onclick="removeFilter('marca')" class="btn btn-sm btn-danger">×</button>
+                        </div>
+                    @endif
+                    @if (request()->filled('cor'))
+                        <div class="filter-active">
+                            <strong>Cor:</strong> {{ request('cor') }}
+                            <button onclick="removeFilter('cor')" class="btn btn-sm btn-danger">×</button>
+                        </div>
+                    @endif
+                    @if (request()->filled('ano'))
+                        <div class="filter-active">
+                            <strong>Ano:</strong> {{ request('ano') }}
+                            <button onclick="removeFilter('ano')" class="btn btn-sm btn-danger">×</button>
+                        </div>
+                    @endif
+                    @if (request()->filled('cliente_id'))
+                        <div class="filter-active">
+                            <strong>Cliente:</strong> {{ optional($clientes->find(request('cliente_id')))->nome ?? 'Cliente não encontrado' }}
+                            <button onclick="removeFilter('cliente_id')" class="btn btn-sm btn-danger">×</button>
+                        </div>
+                    @endif
+                </div>
             </div>
         @endif
 
@@ -100,9 +102,9 @@
             </div>
         </form>
 
-        <!-- Lista de veículos encontrados -->
+        <!-- Resultados da busca -->
         @if ($veiculos->isEmpty())
-            <div class="alert alert-warning mt-4">Nenhum veículo encontrado.</div>
+            <div class="alert alert-warning">Nenhum veículo encontrado.</div>
         @else
             <h2 class="mt-5 mb-4">Resultados da Busca</h2>
             <table class="table table-striped">
@@ -149,4 +151,23 @@
             window.location.href = url.toString();
         }
     </script>
-@endsection <!-- Fim da seção de conteúdo -->
+
+    <!-- Estilo para os filtros ativos -->
+    <style>
+        .filter-active {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background-color: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .filter-active button {
+            padding: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+@endsection

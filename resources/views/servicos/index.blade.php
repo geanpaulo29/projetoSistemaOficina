@@ -7,13 +7,31 @@
         <h1 class="mb-4">Lista de Serviços</h1>
 
         <!-- Feedback dos filtros ativos -->
-        @if (request()->filled('search') || request()->filled('data_inicio') || request()->filled('valor_minimo'))
+        @if (request()->filled('search') || request()->filled('placa') || request()->filled('modelo') || request()->filled('cliente') || request()->filled('data_inicio') || request()->filled('valor_minimo'))
             <div class="mb-4">
                 <h5>Filtros Ativos:</h5>
                 @if (request()->filled('search'))
                     <div class="filter-active">
-                        <strong>Termo de busca:</strong> {{ request('search') }}
+                        <strong>Busca global:</strong> {{ request('search') }}
                         <button onclick="removeFilter('search')">×</button>
+                    </div>
+                @endif
+                @if (request()->filled('placa'))
+                    <div class="filter-active">
+                        <strong>Placa:</strong> {{ request('placa') }}
+                        <button onclick="removeFilter('placa')">×</button>
+                    </div>
+                @endif
+                @if (request()->filled('modelo'))
+                    <div class="filter-active">
+                        <strong>Modelo:</strong> {{ request('modelo') }}
+                        <button onclick="removeFilter('modelo')">×</button>
+                    </div>
+                @endif
+                @if (request()->filled('cliente'))
+                    <div class="filter-active">
+                        <strong>Cliente:</strong> {{ request('cliente') }}
+                        <button onclick="removeFilter('cliente')">×</button>
                     </div>
                 @endif
                 @if (request()->filled('data_inicio') && request()->filled('data_fim'))
@@ -28,21 +46,38 @@
                         <button onclick="removeFilter('valor_minimo')">×</button>
                     </div>
                 @endif
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
             </div>
         @endif
 
         <!-- Formulário de busca e filtros avançados -->
-        <form action="{{ route('servicos.find') }}" method="GET" class="mb-4">
+        <form action="{{ route('servicos.index') }}" method="GET" class="mb-4">
             <div class="row g-3">
-                <!-- Campo de busca -->
-                <div class="col-md-4">
-                    <input type="text" class="form-control" name="search" placeholder="Pesquisar por placa, nome do veículo ou nome do cliente..." value="{{ request('search') }}">
+                <!-- Campo de busca global -->
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="search" placeholder="Busca global..." value="{{ request('search') }}">
+                </div>
+                <!-- Filtro por placa -->
+                <div class="col-md-2">
+                    <input type="text" class="form-control" name="placa" placeholder="Placa" value="{{ request('placa') }}">
+                </div>
+                <!-- Filtro por modelo -->
+                <div class="col-md-2">
+                    <input type="text" class="form-control" name="modelo" placeholder="Modelo" value="{{ request('modelo') }}">
+                </div>
+                <!-- Filtro por cliente -->
+                <div class="col-md-2">
+                    <input type="text" class="form-control" name="cliente" placeholder="Cliente" value="{{ request('cliente') }}">
                 </div>
                 <!-- Filtro por data -->
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <input type="date" class="form-control" name="data_inicio" placeholder="Data inicial" value="{{ request('data_inicio') }}">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <input type="date" class="form-control" name="data_fim" placeholder="Data final" value="{{ request('data_fim') }}">
                 </div>
                 <!-- Filtro por valor mínimo -->
@@ -66,7 +101,6 @@
                     <th>Cliente</th>
                     <th class="sortable" onclick="sortTable('valor')">Valor</th>
                     <th>Ações</th>
-                    
                 </tr>
             </thead>
             <tbody>
@@ -77,7 +111,6 @@
                         <td>{{ $servico->descricao }}</td>
                         <td>{{ $servico->veiculo->cliente->nome }}</td>
                         <td>R$ {{ number_format($servico->valor, 2, ',', '.') }}</td>
-                        
                         <td>
                             <a href="{{ route('ordem-servico.show', $servico->id) }}" class="btn btn-sm btn-info">Gerar Ordem</a>
                             <a href="{{ route('servicos.edit', $servico->id) }}" class="btn btn-sm btn-warning">Editar</a>
@@ -95,6 +128,11 @@
         <!-- Links de paginação -->
         <div class="d-flex justify-content-center">
             {{ $servicos->links() }}
+        </div>
+
+        <!-- Feedback de paginação -->
+        <div class="mt-3 text-center">
+            Mostrando {{ $servicos->firstItem() }} a {{ $servicos->lastItem() }} de {{ $servicos->total() }} registros.
         </div>
     </div>
 
