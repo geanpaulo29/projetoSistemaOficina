@@ -150,4 +150,13 @@ class ServicoController extends Controller
 
         return redirect()->route('servicos.index')->with('success', 'Serviço excluído com sucesso!');
     }
+        // Gera a ordem de serviço
+    public function gerarOrdemServico($id)
+    {
+        $servico = Servico::with('veiculo.cliente')->findOrFail($id); // Busca o serviço com relacionamentos
+        $configuracao = Configuracao::first(); // Busca as configurações da oficina
+
+        return view('ordem_servico.show', compact('servico', 'configuracao'));
+    }
+    
 }
