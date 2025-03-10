@@ -51,6 +51,9 @@
                 <a href="{{ route('veiculos.search') }}" class="nav-link">Buscar Veículo</a>
                 <a href="{{ route('servicos.create') }}" class="nav-link">Adicionar Serviço</a>
                 <a href="{{ route('servicos.index') }}" class="nav-link">Lista de Serviços</a>
+                <a href="{{ route('relatorios.servicos') }}" class="nav-link">Relatório de Serviços</a>
+                <a href="{{ route('relatorios.clientes') }}" class="nav-link">Estatísticas de Clientes</a>
+                <a href="{{ route('relatorios.faturamento') }}" class="nav-link">Faturamento Mensal</a>
             </div>
             <div class="ms-auto">
                 <form action="{{ route('logout') }}" method="POST">

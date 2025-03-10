@@ -11,6 +11,16 @@ class Servico extends Model
 
     protected $fillable = ['veiculo_id', 'descricao', 'valor', 'data_servico'];
 
+    public function getDataServicoFormatadaAttribute()
+    {
+    return $this->data_servico->format('d/m/Y');
+    }
+
+    // Define o cast para o campo data_servico
+    protected $casts = [
+        'data_servico' => 'date', // Converte automaticamente para Carbon
+    ];
+
     // Relacionamento com Veículo
     public function veiculo()
     {
