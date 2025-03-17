@@ -1,52 +1,44 @@
-@extends('layouts.app') <!-- Estende o layout principal -->
+@extends('layouts.app')
 
-@section('title', 'Home') <!-- Define o título da página -->
+@section('title', 'Home')
 
-@section('content') <!-- Início da seção de conteúdo -->
+@section('content')
     <div class="center-container">
-        <!-- Botão 1: Cadastrar Veículo -->
         <a href="{{ route('veiculos.create') }}" class="btn btn-primary btn-custom">
+            <i class="fas fa-car fa-3x mb-2"></i>
             Cadastrar Veículo
         </a>
-
-        <!-- Botão 4: Buscar Veículo -->
         <a href="{{ route('veiculos.index') }}" class="btn btn-primary btn-custom">
+            <i class="fas fa-search fa-3x mb-2"></i>
             Buscar Veículo
         </a>
-
-        <!-- Botão 2: Cadastrar Cliente -->
         <a href="{{ route('clientes.create') }}" class="btn btn-warning btn-custom">
+            <i class="fas fa-user-plus fa-3x mb-2"></i>
             Cadastrar Cliente
         </a>
-
-        <!-- Botão 3: Buscar Cliente -->
         <a href="{{ route('clientes.index') }}" class="btn btn-warning btn-custom">
+            <i class="fas fa-search fa-3x mb-2"></i>
             Buscar Cliente
         </a>
-
-        <!-- Botão 7: Estatísticas de clientes -->
         <a href="{{ route('relatorios.clientes') }}" class="btn btn-warning btn-custom">
+            <i class="fas fa-chart-line fa-3x mb-2"></i>
             Estatísticas de Clientes
         </a>
-
-        <!-- Botão 5: Adicionar Serviço -->
         <a href="{{ route('servicos.create') }}" class="btn btn-danger btn-custom">
+            <i class="fas fa-tools fa-3x mb-2"></i>
             Adicionar Serviço
         </a>
-
-        <!-- Botão 6: Lista de Serviços -->
         <a href="{{ route('servicos.index') }}" class="btn btn-danger btn-custom">
+            <i class="fas fa-list fa-3x mb-2"></i>
             Lista de Serviços
         </a>
-
-        <!-- Botão 7: Relatorio de Serviços -->
-         <a href="{{ route('relatorios.servicos') }}" class="btn btn-danger btn-custom">
-            Relatorio de Serviços
+        <a href="{{ route('relatorios.servicos') }}" class="btn btn-danger btn-custom">
+            <i class="fas fa-file-alt fa-3x mb-2"></i>
+            Relatório de Serviços
         </a>
-
-        <!-- Botão 7: Faturamento Mensal -->
         <a href="{{ route('relatorios.faturamento') }}" class="btn btn-success btn-custom">
+            <i class="fas fa-dollar-sign fa-3x mb-2"></i>
             Faturamento Mensal
         </a>
     </div>
-@endsection <!-- Fim da seção de conteúdo -->
+@endsection
