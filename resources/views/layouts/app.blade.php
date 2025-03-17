@@ -23,6 +23,9 @@
         .navbar-custom .nav-link:hover {
             color: #007bff;
         }
+        .nav-link i {
+            margin-right: 8px; /* Espaçamento entre o ícone e o texto */
+        }
         .btn-custom {
             width: 150px;
             height: 150px;
@@ -53,14 +56,14 @@
         }
         .back-arrow {
             position: fixed;
-            top: 70px;
-            left: 20px;
+            top: 120px;
+            left: 30px;
             z-index: 1000;
             background-color: #007bff;
             color: white;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -76,27 +79,51 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light navbar-custom fixed-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('home') }}">Home</a>
+            <a class="navbar-brand" href="{{ route('home') }}">
+                <i class="fas fa-home"></i> Home
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <div class="navbar-nav me-auto">
-                    <a href="{{ route('veiculos.create') }}" class="nav-link">Cadastrar Veículo</a>
-                    <a href="{{ route('clientes.create') }}" class="nav-link">Cadastrar Cliente</a>
-                    <a href="{{ route('clientes.search') }}" class="nav-link">Buscar Cliente</a>
-                    <a href="{{ route('veiculos.search') }}" class="nav-link">Buscar Veículo</a>
-                    <a href="{{ route('servicos.create') }}" class="nav-link">Adicionar Serviço</a>
-                    <a href="{{ route('servicos.index') }}" class="nav-link">Lista de Serviços</a>
-                    <a href="{{ route('relatorios.servicos') }}" class="nav-link">Relatório de Serviços</a>
-                    <a href="{{ route('relatorios.clientes') }}" class="nav-link">Estatísticas de Clientes</a>
-                    <a href="{{ route('relatorios.faturamento') }}" class="nav-link">Faturamento Mensal</a>
-                    <a href="{{ route('configuracoes.edit') }}" class="nav-link">Configurações</a>
+                    <a href="{{ route('veiculos.create') }}" class="nav-link">
+                        <i class="fas fa-car"></i> Cadastrar Veículo
+                    </a>
+                    <a href="{{ route('clientes.create') }}" class="nav-link">
+                        <i class="fas fa-user-plus"></i> Cadastrar Cliente
+                    </a>
+                    <a href="{{ route('clientes.search') }}" class="nav-link">
+                        <i class="fas fa-search"></i> Buscar Cliente
+                    </a>
+                    <a href="{{ route('veiculos.search') }}" class="nav-link">
+                        <i class="fas fa-search"></i> Buscar Veículo
+                    </a>
+                    <a href="{{ route('servicos.create') }}" class="nav-link">
+                        <i class="fas fa-tools"></i> Adicionar Serviço
+                    </a>
+                    <a href="{{ route('servicos.index') }}" class="nav-link">
+                        <i class="fas fa-list"></i> Lista de Serviços
+                    </a>
+                    <a href="{{ route('relatorios.servicos') }}" class="nav-link">
+                        <i class="fas fa-file-alt"></i> Relatório de Serviços
+                    </a>
+                    <a href="{{ route('relatorios.clientes') }}" class="nav-link">
+                        <i class="fas fa-chart-line"></i> Estatísticas de Clientes
+                    </a>
+                    <a href="{{ route('relatorios.faturamento') }}" class="nav-link">
+                        <i class="fas fa-dollar-sign"></i> Faturamento Mensal
+                    </a>
+                    <a href="{{ route('configuracoes.edit') }}" class="nav-link">
+                        <i class="fas fa-cog"></i> Configurações
+                    </a>
                 </div>
                 <div class="ms-auto">
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button type="submit" class="btn btn-outline-danger">Logout</button>
+                        <button type="submit" class="btn btn-outline-danger">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
                     </form>
                 </div>
             </div>
