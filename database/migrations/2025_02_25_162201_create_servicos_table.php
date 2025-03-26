@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('servicos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('veiculo_id')->constrained('veiculos')->onDelete('cascade'); // Relacionamento com veículo
-            $table->text('descricao'); // Descrição do serviço
-            $table->decimal('valor', 10, 2); // Valor do serviço
-            $table->date('data_servico'); // Data do serviço
+            $table->foreignId('veiculo_id')->constrained('veiculos')->onDelete('cascade');
+            $table->text('descricao');
+            $table->decimal('valor_mao_de_obra', 10, 2); // Renomeado de 'valor' para ficar claro
+            $table->json('itens')->nullable(); // Armazena peças em formato JSON
+            $table->decimal('valor_total', 10, 2); // Soma de itens + mão de obra
+            $table->date('data_servico');
             $table->timestamps();
         });
     }

@@ -26,12 +26,30 @@ class ServicoController extends Controller
         $request->validate([
             'veiculo_id' => 'required|exists:veiculos,id',
             'descricao' => 'required|string',
-            'valor' => 'required|numeric|min:0',
+            'valor_mao_de_obra' => 'required|numeric|min:0',
+            'itens' => 'nullable|array',
+            'itens.*.nome' => 'required|string',
+            'itens.*.quantidade' => 'required|numeric|min:1',
+            'itens.*.valor_unitario' => 'required|numeric|min:0',
             'data_servico' => 'required|date',
         ]);
-
-        Servico::create($request->all());
-
+    
+        // Calcula o valor total dos itens
+        $itens = collect($request->itens)->map(function ($item) {
+            $item['valor_total'] = $item['quantidade'] * $item['valor_unitario'];
+            return $item;
+        });
+    
+        // Cria o serviço com os itens em JSON
+        $servico = Servico::create([
+            'veiculo_id' => $request->veiculo_id,
+            'descricao' => $request->descricao,
+            'valor_mao_de_obra' => $request->valor_mao_de_obra,
+            'itens' => $itens,
+            'valor_total' => $request->valor_total, // Já calculado pelo JavaScript
+            'data_servico' => $request->data_servico,
+        ]);
+    
         return redirect()->route('servicos.index')->with('success', 'Serviço cadastrado com sucesso!');
     }
 
