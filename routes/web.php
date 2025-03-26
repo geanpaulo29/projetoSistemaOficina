@@ -13,8 +13,6 @@ use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\OrdemServicoController;
 use App\Http\Controllers\ConfiguracaoController;
 
-Route::get('/ordem-servico/{id}/pdf', [OrdemServicoController::class, 'gerarPdf'])->name('ordem-servico.pdf');
-
 // Rotas para Clientes
 Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
 Route::get('/clientes/create', [ClienteController::class, 'create'])->name('clientes.create');
@@ -44,7 +42,10 @@ Route::get('/servicos/find', [ServicoController::class, 'find'])->name('servicos
 Route::get('/servicos/{id}/edit', [ServicoController::class, 'edit'])->name('servicos.edit');
 Route::put('/servicos/{id}', [ServicoController::class, 'update'])->name('servicos.update');
 Route::delete('/servicos/{id}', [ServicoController::class, 'destroy'])->name('servicos.destroy');
+Route::get('/servicos/{id}/detalhes', [ServicoController::class, 'detalhes'])->name('servicos.detalhes');
 Route::get('/ordem-servico/{id}', [ServicoController::class, 'gerarOrdemServico'])->name('ordem-servico.show');
+Route::get('/ordem-servico/{id}/pdf', [OrdemServicoController::class, 'gerarPdf'])->name('ordem-servico.pdf');
+
 
 // Rotas para Relatórios
 Route::get('/relatorios/servicos', [RelatorioController::class, 'servicos'])->name('relatorios.servicos');

@@ -52,6 +52,11 @@ class ServicoController extends Controller
     
         return redirect()->route('servicos.index')->with('success', 'Serviço cadastrado com sucesso!');
     }
+    public function detalhes($id)
+    {
+        $servico = Servico::with(['veiculo.cliente'])->findOrFail($id);
+        return view('servicos.detalhes', compact('servico'));
+    }
 
     // Lista todos os serviços com paginação e filtros
     public function index(Request $request)
@@ -126,23 +131,40 @@ class ServicoController extends Controller
     public function edit($id)
     {
         $servico = Servico::findOrFail($id);
-        $veiculos = Veiculo::all();
+        $veiculos = Veiculo::with('cliente')->get();
         return view('servicos.edit', compact('servico', 'veiculos'));
     }
-
-    // Atualiza o serviço no banco de dados
+    
     public function update(Request $request, $id)
     {
         $request->validate([
             'veiculo_id' => 'required|exists:veiculos,id',
             'descricao' => 'required|string',
-            'valor' => 'required|numeric|min:0',
+            'valor_mao_de_obra' => 'required|numeric|min:0',
+            'itens' => 'nullable|array',
+            'itens.*.nome' => 'required|string',
+            'itens.*.quantidade' => 'required|numeric|min:1',
+            'itens.*.valor_unitario' => 'required|numeric|min:0',
             'data_servico' => 'required|date',
         ]);
-
+    
         $servico = Servico::findOrFail($id);
-        $servico->update($request->all());
-
+    
+        // Calcula valores totais
+        $itens = collect($request->itens)->map(function ($item) {
+            $item['valor_total'] = $item['quantidade'] * $item['valor_unitario'];
+            return $item;
+        });
+    
+        $servico->update([
+            'veiculo_id' => $request->veiculo_id,
+            'descricao' => $request->descricao,
+            'valor_mao_de_obra' => $request->valor_mao_de_obra,
+            'itens' => $itens,
+            'valor_total' => $request->valor_total,
+            'data_servico' => $request->data_servico,
+        ]);
+    
         return redirect()->route('servicos.index')->with('success', 'Serviço atualizado com sucesso!');
     }
 
@@ -154,4 +176,5 @@ class ServicoController extends Controller
 
         return redirect()->route('servicos.index')->with('success', 'Serviço excluído com sucesso!');
     }
+    
 }
