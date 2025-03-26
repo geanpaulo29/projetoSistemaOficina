@@ -103,8 +103,7 @@
                             <td>{{ $servico->veiculo->cliente->nome }}</td>
                             <td>R$ {{ number_format($servico->valor, 2, ',', '.') }}</td>
                             <td>
-                                <a href="{{ route('ordem-servico.show', $servico->id) }}" class="btn btn-sm btn-info" title="Gerar Ordem"><i class="fas fa-file-alt"></i></a>
-                                <a href="{{ route('servicos.edit', $servico->id) }}" class="btn btn-sm btn-warning" title="Editar"><i class="fas fa-edit"></i></a>
+                                <a href="{{ route('ordem-servico.pdf', $servico->id) }}" class="btn btn-sm btn-info" title="Gerar PDF"><i class="fas fa-file-pdf"></i> Gerar PDF</a>                                <a href="{{ route('servicos.edit', $servico->id) }}" class="btn btn-sm btn-warning" title="Editar"><i class="fas fa-edit"></i></a>
                                 <form action="{{ route('servicos.destroy', $servico->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')

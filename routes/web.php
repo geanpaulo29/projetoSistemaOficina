@@ -13,6 +13,8 @@ use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\OrdemServicoController;
 use App\Http\Controllers\ConfiguracaoController;
 
+Route::get('/ordem-servico/{id}/pdf', [OrdemServicoController::class, 'gerarPdf'])->name('ordem-servico.pdf');
+
 // Rotas para Clientes
 Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
 Route::get('/clientes/create', [ClienteController::class, 'create'])->name('clientes.create');

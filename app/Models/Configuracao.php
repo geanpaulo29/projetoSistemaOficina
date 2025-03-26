@@ -12,5 +12,16 @@ class Configuracao extends Model
     // Define o nome da tabela manualmente
     protected $table = 'configuracoes';
 
-    protected $fillable = ['nome_oficina', 'logo_oficina'];
+    protected $fillable = [
+        'nome_oficina',
+        'logo_oficina',
+        'cnpj',
+        'cep',
+        'cidade',
+        'bairro',
+        'rua',
+        'numero',
+        'telefone',
+        'email',
+    ];
 }

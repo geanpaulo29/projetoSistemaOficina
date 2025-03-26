@@ -14,7 +14,15 @@ return new class extends Migration
         Schema::create('configuracoes', function (Blueprint $table) {
             $table->id();
             $table->string('nome_oficina');
-            $table->string('logo_oficina')->nullable(); // Caminho da imagem do logo
+            $table->string('logo_oficina')->nullable();
+            $table->string('cnpj')->nullable();
+            $table->string('cep')->nullable();
+            $table->string('cidade')->nullable();
+            $table->string('bairro')->nullable();
+            $table->string('rua')->nullable();
+            $table->string('numero')->nullable();
+            $table->string('telefone')->nullable();
+            $table->string('email')->nullable();
             $table->timestamps();
         });
     }
