@@ -51,6 +51,12 @@ Route::get('/ordem-servico/{id}/pdf', [OrdemServicoController::class, 'gerarPdf'
 Route::get('/relatorios/servicos', [RelatorioController::class, 'servicos'])->name('relatorios.servicos');
 Route::get('/relatorios/clientes', [RelatorioController::class, 'clientes'])->name('relatorios.clientes');
 Route::get('/relatorios/faturamento', [RelatorioController::class, 'faturamento'])->name('relatorios.faturamento');
+Route::get('/relatorios/faturamento/detalhes/{ano}/{mes}', [RelatorioController::class, 'faturamentoDetalhes'])->name('relatorios.faturamento.detalhes');
+Route::prefix('relatorios')->group(function() {
+    // ... outras rotas de relatórios ...    
+Route::get('/faturamento', [RelatorioController::class, 'faturamento'])->name('relatorios.faturamento');
+Route::get('/faturamento/detalhes/{ano}/{mes}', [RelatorioController::class, 'faturamentoDetalhes'])
+         ->name('relatorios.faturamento.detalhes');});
 
 // Rotas para Configurações
 Route::get('/configuracoes', [ConfiguracaoController::class, 'edit'])->name('configuracoes.edit');
