@@ -3,119 +3,95 @@
 @section('title', 'Faturamento Mensal')
 
 @section('content')
-@php
-    $mesesPt = [
-        1 => 'Janeiro',
-        2 => 'Fevereiro',
-        3 => 'Março',
-        4 => 'Abril',
-        5 => 'Maio',
-        6 => 'Junho',
-        7 => 'Julho',
-        8 => 'Agosto',
-        9 => 'Setembro',
-        10 => 'Outubro',
-        11 => 'Novembro',
-        12 => 'Dezembro'
-    ];
-@endphp
-
-<div class="container">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">Relatório de Faturamento</h4>
-        </div>
-        <div class="card-body">
-            <!-- Filtros -->
-            <form action="{{ route('relatorios.faturamento') }}" method="GET" class="mb-4">
-                <div class="row g-3 align-items-end">
-                    <div class="col-md-3">
-                        <label for="ano" class="form-label">Ano</label>
-                        <select class="form-select" id="ano" name="ano">
-                            @for($i = date('Y'); $i >= 2020; $i--)
-                                <option value="{{ $i }}" {{ $ano == $i ? 'selected' : '' }}>{{ $i }}</option>
-                            @endfor
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="mes" class="form-label">Mês (opcional)</label>
-                        <select class="form-select" id="mes" name="mes">
-                            <option value="">Todos os meses</option>
-                            @foreach($mesesPt as $num => $nome)
-                                <option value="{{ $num }}" {{ request('mes') == $num ? 'selected' : '' }}>
-                                    {{ $nome }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-filter"></i> Filtrar
-                        </button>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="{{ route('relatorios.faturamento') }}" class="btn btn-outline-secondary w-100">
-                            <i class="fas fa-sync-alt"></i> Limpar Filtros
-                        </a>
-                    </div>
-                </div>
-            </form>
-
-            <!-- Tabela de Resultados -->
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Mês/Ano</th>
-                            <th>Total em Peças</th>
-                            <th>Total em Mão de Obra</th>
-                            <th>Faturamento Total</th>
-                            <th>N° de Serviços</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($faturamentoPorMes as $item)
-                            <tr>
-                                <td>{{ $mesesPt[$item->mes] ?? 'Mês Inválido' }}/{{ $item->ano }}</td>
-                                <td>R$ {{ number_format($item->total_pecas, 2, ',', '.') }}</td>
-                                <td>R$ {{ number_format($item->total_mao_de_obra, 2, ',', '.') }}</td>
-                                <td class="fw-bold">R$ {{ number_format($item->total_geral, 2, ',', '.') }}</td>
-                                <td>{{ $item->quantidade_servicos }}</td>
-                                <td>
-                                <a href="{{ route('relatorios.faturamento.detalhes', ['ano' => $item->ano, 'mes' => $item->mes]) }}" 
-                                class="btn btn-sm btn-info" title="Ver Detalhes">
-                                    <i class="fas fa-search"></i>
-                                </a>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="text-center">Nenhum registro encontrado</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                    @if($faturamentoPorMes->isNotEmpty())
-                        <tfoot class="table-active">
-                            <tr>
-                                <th>Total do Período</th>
-                                <th>R$ {{ number_format($faturamentoPorMes->sum('total_pecas'), 2, ',', '.') }}</th>
-                                <th>R$ {{ number_format($faturamentoPorMes->sum('total_mao_de_obra'), 2, ',', '.') }}</th>
-                                <th>R$ {{ number_format($faturamentoPorMes->sum('total_geral'), 2, ',', '.') }}</th>
-                                <th>{{ $faturamentoPorMes->sum('quantidade_servicos') }}</th>
-                                <th></th>
-                            </tr>
-                        </tfoot>
-                    @endif
-                </table>
-            </div>
-
-            <!-- Gráfico -->
-            <div class="mt-5">
-                <canvas id="faturamentoChart" height="100"></canvas>
-            </div>
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2 class="fw-bold mb-0">Relatório de Faturamento</h2>
         </div>
     </div>
+
+    <x-card title="Filtros">
+        <form action="{{ route('relatorios.faturamento') }}" method="GET" class="mb-4">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label for="ano" class="form-label">Ano</label>
+                    <select class="form-select" id="ano" name="ano">
+                        @for($i = date('Y'); $i >= 2020; $i--)
+                            <option value="{{ $i }}" {{ $ano == $i ? 'selected' : '' }}>{{ $i }}</option>
+                        @endfor
+                    </select>
+                </div>
+                
+                <div class="col-md-4">
+                    <label for="mes" class="form-label">Mês</label>
+                    <select class="form-select" id="mes" name="mes">
+                        <option value="">Todos os meses</option>
+                        @foreach($mesesPt as $num => $nome)
+                            <option value="{{ $num }}" {{ $mes == $num ? 'selected' : '' }}>
+                                {{ $nome }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter me-2"></i> Filtrar
+                    </button>
+                </div>
+                
+                <div class="col-md-2">
+                    <a href="{{ route('relatorios.faturamento') }}" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-sync-alt me-2"></i> Limpar
+                    </a>
+                </div>
+            </div>
+        </form>
+    </x-card>
+
+    <x-card title="Resultados" class="mt-4">
+        <div class="table-responsive">
+            <table class="table table-custom table-hover">
+                <thead>
+                    <tr>
+                        <th>Mês/Ano</th>
+                        <th class="text-end">Peças (R$)</th>
+                        <th class="text-end">Mão de Obra (R$)</th>
+                        <th class="text-end">Total (R$)</th>
+                        <th class="text-end">Serviços</th>
+                        <th class="text-end">Detalhes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($faturamentoPorMes as $item)
+                        <tr>
+                            <td>{{ $item['mes_nome'] }}/{{ $item['ano'] }}</td>
+                            <td class="text-end">@money($item['total_pecas'])</td>
+                            <td class="text-end">@money($item['total_mao_de_obra'])</td>
+                            <td class="text-end fw-bold text-success">@money($item['total_geral'])</td>
+                            <td class="text-end">{{ $item['quantidade_servicos'] }}</td>
+                            <td class="text-end">
+                                <a href="{{ route('relatorios.faturamento.detalhes', ['ano' => $item['ano'], 'mes' => $item['mes']]) }}" 
+                                   class="btn btn-sm btn-info">
+                                    <i class="fas fa-search"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center">Nenhum registro encontrado</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </x-card>
+
+    <x-card title="Gráfico de Faturamento" class="mt-4">
+        <div class="chart-container" style="position: relative; height: 400px;">
+            <canvas id="faturamentoChart"></canvas>
+        </div>
+    </x-card>
 </div>
 
 @push('scripts')
@@ -123,57 +99,23 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const ctx = document.getElementById('faturamentoChart').getContext('2d');
-        
-        // Definindo os meses em português para o JavaScript
-        const mesesPtJS = {
-            1: 'Janeiro',
-            2: 'Fevereiro',
-            3: 'Março',
-            4: 'Abril',
-            5: 'Maio',
-            6: 'Junho',
-            7: 'Julho',
-            8: 'Agosto',
-            9: 'Setembro',
-            10: 'Outubro',
-            11: 'Novembro',
-            12: 'Dezembro'
-        };
-        
-        // Preparando os dados - FORMA CORRIGIDA
-        const dadosGrafico = JSON.parse('{!! json_encode($faturamentoPorMes->map(function($item) {
-            return [
-                "mesNum" => $item->mes,
-                "ano" => $item->ano,
-                "total_pecas" => $item->total_pecas,
-                "total_mao_de_obra" => $item->total_mao_de_obra
-            ];
-        })) !!}');
-        
-        // Criando labels com meses em português
-        const labels = dadosGrafico.map(item => {
-            return (mesesPtJS[item.mesNum] || 'Mês Inválido') + '/' + item.ano;
-        });
-        
-        // Extraindo dados para o gráfico
-        const pecasData = dadosGrafico.map(item => item.total_pecas);
-        const maoDeObraData = dadosGrafico.map(item => item.total_mao_de_obra);
+        const dados = @json($faturamentoPorMes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
         new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: labels,
+                labels: dados.map(item => item.label),
                 datasets: [
                     {
                         label: 'Peças',
-                        data: pecasData,
+                        data: dados.map(item => item.total_pecas),
                         backgroundColor: 'rgba(54, 162, 235, 0.7)',
                         borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 1
                     },
                     {
                         label: 'Mão de Obra',
-                        data: maoDeObraData,
+                        data: dados.map(item => item.total_mao_de_obra),
                         backgroundColor: 'rgba(255, 99, 132, 0.7)',
                         borderColor: 'rgba(255, 99, 132, 1)',
                         borderWidth: 1
@@ -182,18 +124,36 @@
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
-                    title: {
-                        display: true,
-                        text: 'Faturamento Mensal (R$)'
+                    legend: {
+                        position: 'top',
                     },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) label += ': ';
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('pt-BR', {
+                                        style: 'currency',
+                                        currency: 'BRL'
+                                    }).format(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
                         ticks: {
                             callback: function(value) {
-                                return 'R$ ' + value.toLocaleString('pt-BR');
+                                return new Intl.NumberFormat('pt-BR', {
+                                    style: 'currency',
+                                    currency: 'BRL'
+                                }).format(value);
                             }
                         }
                     }

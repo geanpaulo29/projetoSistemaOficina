@@ -3,126 +3,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title')</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>@yield('title') - Sistema Oficina</title>
+    
+    <!-- Fontes e Ícones -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css" rel="stylesheet">
+    
     <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --dark-color: #1b263b;
+            --light-color: #f8f9fa;
+            --success-color: #4cc9f0;
+            --danger-color: #f72585;
+            --warning-color: #f8961e;
+            --info-color: #43aa8b;
+        }
+        
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-        }
-        .navbar-custom {
-            background-color: #ffffff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+            background-color: #f5f7fa;
             color: #333;
-            font-weight: 500;
         }
-        .navbar-custom .nav-link:hover {
-            color: #007bff;
+        
+        /* Navbar */
+        .navbar-custom {
+            background-color: var(--dark-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 0.8rem 1rem;
         }
-        .nav-link i {
-            margin-right: 8px; /* Espaçamento entre o ícone e o texto */
-        }
-        .btn-custom {
-            width: 150px;
-            height: 150px;
-            margin: 10px;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            text-align: center;
-            border-radius: 10px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn-custom:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        .center-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: calc(100vh - 56px);
-            margin-top: 56px;
-            flex-wrap: wrap;
-        }
-        .table-hover tbody tr:hover {
-            background-color: #f1f1f1;
-        }
-        .back-arrow {
-            position: fixed;
-            top: 120px;
-            left: 30px;
-            z-index: 1000;
-            background-color: #007bff;
+        
+        .navbar-custom .navbar-brand {
+            font-weight: 600;
             color: white;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.2s;
+            font-size: 1.25rem;
         }
-        .back-arrow:hover {
-            background-color: #0056b3;
+        
+        .navbar-custom .nav-link {
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            margin: 0 2px;
+            font-size: 0.9rem;
         }
+        
+        .navbar-custom .nav-link:hover,
+        .navbar-custom .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .navbar-custom .nav-link i {
+            margin-right: 6px;
+        }
+        
+        /* Cards */
+        .card-custom {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-custom:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header-custom {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            border: none;
+        }
+        
+        /* Botões */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        /* Tabelas */
+        .table-custom {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .table-custom thead {
+            background-color: var(--dark-color);
+            color: white;
+        }
+        
+        .table-custom th {
+            font-weight: 500;
+            padding: 1rem;
+        }
+        
+        .table-custom td {
+            padding: 0.75rem 1rem;
+            vertical-align: middle;
+        }
+        
+        .table-custom tbody tr {
+            transition: background-color 0.2s ease;
+        }
+        
+        .table-custom tbody tr:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        /* Formulários */
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Alertas */
+        .alert-custom {
+            border-radius: 8px;
+            padding: 1rem;
+            border: none;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 2rem 0;
+        }
+        
+        
+        
+        /* Responsividade */
+        @media (max-width: 992px) {
+            .navbar-custom .navbar-nav {
+                padding-top: 1rem;
+            }
+            
+            .navbar-custom .nav-link {
+                margin: 2px 0;
+            }
+            
+            .back-arrow {
+                top: 80px;
+            }
+        }
+        
+        @media print {
+            .no-print {
+                display: none;
+            }
+            
+            .card {
+                border: none;
+                box-shadow: none;
+            }
+        }
+        /* Dropdowns */
+.navbar .dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    margin-top: 8px;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1.25rem;
+    border-radius: 6px;
+    margin: 2px 8px;
+    width: auto;
+}
+
+.dropdown-item:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.dropdown-divider {
+    margin: 0.5rem 0;
+}
     </style>
+    
+    @stack('styles')
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light navbar-custom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ route('home') }}">
-                <i class="fas fa-home"></i> Home
+                <i class="fas fa-car me-2"></i> Oficina Mecânica
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <div class="navbar-nav me-auto">
-                    <a href="{{ route('veiculos.create') }}" class="nav-link">
-                        <i class="fas fa-car"></i> Cadastrar Veículo
-                    </a>
-                    <a href="{{ route('clientes.create') }}" class="nav-link">
-                        <i class="fas fa-user-plus"></i> Cadastrar Cliente
-                    </a>
-                    <a href="{{ route('clientes.search') }}" class="nav-link">
-                        <i class="fas fa-search"></i> Buscar Cliente
-                    </a>
-                    <a href="{{ route('veiculos.search') }}" class="nav-link">
-                        <i class="fas fa-search"></i> Buscar Veículo
-                    </a>
-                    <a href="{{ route('servicos.create') }}" class="nav-link">
-                        <i class="fas fa-tools"></i> Adicionar Serviço
-                    </a>
-                    <a href="{{ route('servicos.index') }}" class="nav-link">
-                        <i class="fas fa-list"></i> Lista de Serviços
-                    </a>
-                    <a href="{{ route('relatorios.servicos') }}" class="nav-link">
-                        <i class="fas fa-file-alt"></i> Relatório de Serviços
-                    </a>
-                    <a href="{{ route('relatorios.clientes') }}" class="nav-link">
-                        <i class="fas fa-chart-line"></i> Estatísticas de Clientes
-                    </a>
-                    <a href="{{ route('relatorios.faturamento') }}" class="nav-link">
-                        <i class="fas fa-dollar-sign"></i> Faturamento Mensal
-                    </a>
-                    <a href="{{ route('configuracoes.edit') }}" class="nav-link">
-                        <i class="fas fa-cog"></i> Configurações
-                    </a>
-                </div>
+                <ul class="navbar-nav me-auto">
+                    <!-- Clientes Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-users me-1"></i> Clientes
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ route('clientes.create') }}">
+                                <i class="fas fa-plus me-2"></i>Novo Cliente
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ route('clientes.search') }}">
+                                <i class="fas fa-search me-2"></i>Buscar Clientes
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ route('clientes.index') }}">
+                                <i class="fas fa-list me-2"></i>Lista Completa
+                            </a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Veículos Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-car me-1"></i> Veículos
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ route('veiculos.create') }}">
+                                <i class="fas fa-plus me-2"></i>Novo Veículo
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ route('veiculos.search') }}">
+                                <i class="fas fa-search me-2"></i>Buscar Veículos
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ route('veiculos.index') }}">
+                                <i class="fas fa-list me-2"></i>Lista Completa
+                            </a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Serviços Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-tools me-1"></i> Serviços
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ route('servicos.create') }}">
+                                <i class="fas fa-plus me-2"></i>Novo Serviço
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ route('servicos.index') }}">
+                                <i class="fas fa-search me-2"></i>Buscar Serviços
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ route('relatorios.servicos') }}">
+                                <i class="fas fa-file-alt me-2"></i>Relatórios
+                            </a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Relatórios -->
+                    <li class="nav-item">
+                        <a href="{{ route('relatorios.faturamento') }}" class="nav-link">
+                            <i class="fas fa-chart-line me-1"></i> Relatórios
+                        </a>
+                    </li>
+
+                    @if(auth()->user()->is_admin)
+                    <li class="nav-item">
+                        <a href="{{ route('configuracoes.edit') }}" class="nav-link">
+                            <i class="fas fa-cog me-1"></i> Configurações
+                        </a>
+                    </li>
+                    @endif
+                </ul>
+
                 <div class="ms-auto">
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button type="submit" class="btn btn-outline-danger">
-                            <i class="fas fa-sign-out-alt"></i> Logout
+                        <button type="submit" class="btn btn-outline-light">
+                            <i class="fas fa-sign-out-alt me-1"></i> Sair
                         </button>
                     </form>
                 </div>
@@ -136,10 +327,15 @@
     </a>
 
     <!-- Conteúdo Principal -->
-    <main class="py-4" style="margin-top: 80px">
-        @yield('content')
+    <main class="main-content">
+        <div class="container-fluid px-4">
+            @yield('content')
+        </div>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    @stack('scripts')
 </body>
 </html>

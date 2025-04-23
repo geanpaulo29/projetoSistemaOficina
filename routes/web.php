@@ -47,6 +47,7 @@ Route::get('/ordem-servico/{id}', [ServicoController::class, 'gerarOrdemServico'
 Route::get('/ordem-servico/{id}/pdf', [OrdemServicoController::class, 'gerarPdf'])->name('ordem-servico.pdf');
 
 
+
 // Rotas para Relatórios
 Route::get('/relatorios/servicos', [RelatorioController::class, 'servicos'])->name('relatorios.servicos');
 Route::get('/relatorios/clientes', [RelatorioController::class, 'clientes'])->name('relatorios.clientes');

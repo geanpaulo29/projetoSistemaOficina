@@ -24,4 +24,8 @@ class Cliente extends Model
     {
         return $this->hasMany(Veiculo::class);
     }
+    public function servicos()
+    {
+        return $this->hasManyThrough(Servico::class, Veiculo::class);
+    }
 }

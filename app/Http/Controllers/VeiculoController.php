@@ -25,59 +25,54 @@ class VeiculoController extends Controller
     // Exibe o formulário de busca de veículos
     public function search()
     {
-        $clientes = Cliente::all();
-        $veiculos = Veiculo::with('cliente')->get();
-        return view('veiculos.search', compact('veiculos', 'clientes'));
+        $clientes = Cliente::orderBy('nome')->get();
+        $veiculos = Veiculo::paginate(10); // Adicione esta linha
+        
+        return view('veiculos.search', compact('clientes', 'veiculos'));
     }
+    
 
     // Processa a busca de veículos
     public function find(Request $request)
     {
-        $query = Veiculo::query();
+        $query = Veiculo::query()->with('cliente');
 
-        // Filtro por termo de busca geral
+        // Aplica filtros
         if ($request->filled('search')) {
             $search = $request->input('search');
-            $query->where(function ($q) use ($search) {
+            $query->where(function($q) use ($search) {
                 $q->where('modelo', 'like', "%$search%")
-                  ->orWhere('placa', 'like', "%$search%")
-                  ->orWhere('marca', 'like', "%$search%");
+                ->orWhere('placa', 'like', "%$search%")
+                ->orWhere('marca', 'like', "%$search%");
             });
         }
 
-        // Filtros avançados
-        if ($request->filled('modelo')) {
-            $query->where('modelo', 'like', "%{$request->input('modelo')}%");
-        }
         if ($request->filled('placa')) {
-            $query->where('placa', 'like', "%{$request->input('placa')}%");
+            $query->where('placa', 'like', "%{$request->placa}%");
         }
-        if ($request->filled('marca')) {
-            $query->where('marca', 'like', "%{$request->input('marca')}%");
+
+        if ($request->filled('modelo')) {
+            $query->where('modelo', 'like', "%{$request->modelo}%");
         }
+
         if ($request->filled('cor')) {
-            $query->where('cor', 'like', "%{$request->input('cor')}%");
+            $query->where('cor', 'like', "%{$request->cor}%");
         }
+
         if ($request->filled('ano')) {
-            $query->where('ano', $request->input('ano'));
+            $query->where('ano', $request->ano);
         }
+
         if ($request->filled('cliente_id')) {
-            $query->where('cliente_id', $request->input('cliente_id'));
+            $query->where('cliente_id', $request->cliente_id);
         }
 
-        // Executa a query e obtém os resultados
-        $veiculos = $query->with('cliente')->get();
+        // Paginação com 10 itens por página
 
-        // Busca todos os clientes para o dropdown
-        $clientes = Cliente::all();
+        $veiculos = $query->paginate(10)->appends($request->query());
+        $clientes = Cliente::orderBy('nome')->get();
 
-        // Busca o nome do cliente selecionado (se houver)
-        $clienteSelecionado = null;
-        if ($request->filled('cliente_id')) {
-            $clienteSelecionado = Cliente::find($request->input('cliente_id'));
-        }
-
-        return view('veiculos.search', compact('veiculos', 'clientes', 'clienteSelecionado'));
+        return view('veiculos.results', compact('veiculos', 'clientes'));
     }
 
     // Salva o veículo no banco de dados

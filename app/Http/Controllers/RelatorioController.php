@@ -55,10 +55,14 @@ class RelatorioController extends Controller
         $ano = $request->input('ano', date('Y'));
         $mes = $request->input('mes');
     
-        // Primeiro obtemos os serviços filtrados
-        $query = Servico::query()
-            ->whereYear('data_servico', $ano)
-            ->orderBy('data_servico', 'desc');
+        $mesesPt = [
+            1 => 'Janeiro', 2 => 'Fevereiro', 3 => 'Março', 4 => 'Abril',
+            5 => 'Maio', 6 => 'Junho', 7 => 'Julho', 8 => 'Agosto',
+            9 => 'Setembro', 10 => 'Outubro', 11 => 'Novembro', 12 => 'Dezembro'
+        ];
+    
+        $query = Servico::whereYear('data_servico', $ano)
+            ->orderBy('data_servico');
     
         if ($mes) {
             $query->whereMonth('data_servico', $mes);
@@ -66,32 +70,36 @@ class RelatorioController extends Controller
     
         $servicos = $query->get();
     
-        // Agrupamos manualmente por mês/ano
         $faturamentoPorMes = $servicos->groupBy(function ($item) {
             return $item->data_servico->format('Y-m');
-        })->map(function ($group) {
+        })->map(function ($group) use ($mesesPt) {
             $totalPecas = $group->sum(function ($servico) {
                 return collect($servico->itens)->sum(function ($item) {
                     return $item['quantidade'] * $item['valor_unitario'];
                 });
             });
     
-            return (object) [
+            $mesNum = (int)$group->first()->data_servico->format('m');
+            
+            return [
                 'ano' => $group->first()->data_servico->format('Y'),
-                'mes' => $group->first()->data_servico->format('m'),
+                'mes' => $mesNum,
+                'mes_nome' => $mesesPt[$mesNum] ?? 'Mês Inválido',
                 'total_pecas' => $totalPecas,
                 'total_mao_de_obra' => $group->sum('valor_mao_de_obra'),
                 'total_geral' => $group->sum('valor_total'),
-                'quantidade_servicos' => $group->count()
+                'quantidade_servicos' => $group->count(),
+                'label' => substr($mesesPt[$mesNum] ?? 'Mês Inválido', 0, 3) . '/' . $group->first()->data_servico->format('y')
             ];
         })->sortByDesc(function ($item) {
-            return $item->ano . $item->mes;
+            return $item['ano'] . str_pad($item['mes'], 2, '0', STR_PAD_LEFT);
         })->values();
     
         return view('relatorios.faturamento', [
             'faturamentoPorMes' => $faturamentoPorMes,
             'ano' => $ano,
-            'mes' => $mes
+            'mes' => $mes,
+            'mesesPt' => $mesesPt
         ]);
     }
 
