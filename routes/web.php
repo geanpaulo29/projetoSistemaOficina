@@ -12,6 +12,7 @@ use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\OrdemServicoController;
 use App\Http\Controllers\ConfiguracaoController;
+use App\Http\Controllers\OrcamentoController;
 
 // Rotas para Clientes
 Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
@@ -46,7 +47,9 @@ Route::get('/servicos/{id}/detalhes', [ServicoController::class, 'detalhes'])->n
 Route::get('/ordem-servico/{id}', [ServicoController::class, 'gerarOrdemServico'])->name('ordem-servico.show');
 Route::get('/ordem-servico/{id}/pdf', [OrdemServicoController::class, 'gerarPdf'])->name('ordem-servico.pdf');
 
-
+//Rotas para orçamento
+Route::resource('orcamentos', OrcamentoController::class)->except(['edit', 'update']);
+Route::post('/orcamentos/{orcamento}/approve', [OrcamentoController::class, 'approve'])->name('orcamentos.approve');
 
 // Rotas para Relatórios
 Route::get('/relatorios/servicos', [RelatorioController::class, 'servicos'])->name('relatorios.servicos');

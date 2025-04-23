@@ -220,106 +220,141 @@
 .dropdown-divider {
     margin: 0.5rem 0;
 }
+
+.btn-outline-light {
+    border-color: rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.85);
+    transition: all 0.3s ease;
+}
+
+.btn-outline-light:hover {
+    border-color: white;
+    color: white;
+    background-color: rgba(255,255,255,0.1);
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+}
+
+.gap-3 {
+    gap: 1rem !important;
+}
     </style>
     
     @stack('styles')
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('home') }}">
-                <i class="fas fa-car me-2"></i> Oficina Mecânica
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <!-- Clientes Dropdown -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-users me-1"></i> Clientes
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ route('clientes.create') }}">
-                                <i class="fas fa-plus me-2"></i>Novo Cliente
-                            </a></li>
-                            <li><a class="dropdown-item" href="{{ route('clientes.search') }}">
-                                <i class="fas fa-search me-2"></i>Buscar Clientes
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ route('clientes.index') }}">
-                                <i class="fas fa-list me-2"></i>Lista Completa
-                            </a></li>
-                        </ul>
-                    </li>
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ route('home') }}">
+            <i class="fas fa-car me-2"></i> Oficina Mecânica
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <!-- Clientes Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-users me-1"></i> Clientes
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ route('clientes.create') }}">
+                            <i class="fas fa-plus me-2"></i>Novo Cliente
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ route('clientes.search') }}">
+                            <i class="fas fa-search me-2"></i>Buscar Clientes
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ route('clientes.index') }}">
+                            <i class="fas fa-list me-2"></i>Lista Completa
+                        </a></li>
+                    </ul>
+                </li>
 
-                    <!-- Veículos Dropdown -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-car me-1"></i> Veículos
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ route('veiculos.create') }}">
-                                <i class="fas fa-plus me-2"></i>Novo Veículo
-                            </a></li>
-                            <li><a class="dropdown-item" href="{{ route('veiculos.search') }}">
-                                <i class="fas fa-search me-2"></i>Buscar Veículos
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ route('veiculos.index') }}">
-                                <i class="fas fa-list me-2"></i>Lista Completa
-                            </a></li>
-                        </ul>
-                    </li>
+                <!-- Veículos Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-car me-1"></i> Veículos
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ route('veiculos.create') }}">
+                            <i class="fas fa-plus me-2"></i>Novo Veículo
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ route('veiculos.search') }}">
+                            <i class="fas fa-search me-2"></i>Buscar Veículos
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ route('veiculos.index') }}">
+                            <i class="fas fa-list me-2"></i>Lista Completa
+                        </a></li>
+                    </ul>
+                </li>
 
-                    <!-- Serviços Dropdown -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-tools me-1"></i> Serviços
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ route('servicos.create') }}">
-                                <i class="fas fa-plus me-2"></i>Novo Serviço
-                            </a></li>
-                            <li><a class="dropdown-item" href="{{ route('servicos.index') }}">
-                                <i class="fas fa-search me-2"></i>Buscar Serviços
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ route('relatorios.servicos') }}">
-                                <i class="fas fa-file-alt me-2"></i>Relatórios
-                            </a></li>
-                        </ul>
-                    </li>
+                <!-- Serviços Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-tools me-1"></i> Serviços
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ route('servicos.create') }}">
+                            <i class="fas fa-plus me-2"></i>Novo Serviço
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ route('servicos.index') }}">
+                            <i class="fas fa-search me-2"></i>Buscar Serviços
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ route('relatorios.servicos') }}">
+                            <i class="fas fa-file-alt me-2"></i>Relatórios
+                        </a></li>
+                    </ul>
+                </li>
 
-                    <!-- Relatórios -->
-                    <li class="nav-item">
-                        <a href="{{ route('relatorios.faturamento') }}" class="nav-link">
-                            <i class="fas fa-chart-line me-1"></i> Relatórios
-                        </a>
-                    </li>
+                <!-- Relatórios -->
+                <li class="nav-item">
+                    <a href="{{ route('relatorios.faturamento') }}" class="nav-link">
+                        <i class="fas fa-chart-line me-1"></i> Relatórios
+                    </a>
+                </li>
 
-                    @if(auth()->user()->is_admin)
-                    <li class="nav-item">
-                        <a href="{{ route('configuracoes.edit') }}" class="nav-link">
-                            <i class="fas fa-cog me-1"></i> Configurações
-                        </a>
-                    </li>
-                    @endif
-                </ul>
+                <!-- Orçamentos Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-file-invoice me-1"></i> Orçamentos
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ route('orcamentos.create') }}">
+                            <i class="fas fa-plus me-2"></i>Novo Orçamento
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ route('orcamentos.index') }}">
+                            <i class="fas fa-list me-2"></i>Lista de Orçamentos
+                        </a></li>
+                    </ul>
+                </li>
+            </ul>
 
-                <div class="ms-auto">
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-outline-light">
-                            <i class="fas fa-sign-out-alt me-1"></i> Sair
-                        </button>
-                    </form>
-                </div>
+            <!-- Controles do Lado Direito -->
+            <!-- Controles do Lado Direito -->
+            <div class="d-flex align-items-center gap-3">
+                <a href="{{ route('configuracoes.edit') }}" class="btn btn-outline-light btn-sm">
+                    <i class="fas fa-cog me-1"></i>
+                </a>
+                
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-light">
+                        <i class="fas fa-sign-out-alt me-1"></i> Sair
+                    </button>
+                </form>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
 
     <!-- Botão de Voltar -->
     <a href="javascript:history.back()" class="back-arrow">
