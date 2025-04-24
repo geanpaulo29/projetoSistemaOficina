@@ -41,6 +41,10 @@
                                 <td>{{ \Carbon\Carbon::parse($orcamento->validade)->format('d/m/Y') }}</td>
                                 <td class="text-end">
                                     <div class="d-flex justify-content-end gap-2">
+                                        <a href="{{ route('orcamentos.pdf', $orcamento->id) }}" 
+                                           class="btn btn-sm btn-info" title="Imprimir">
+                                            <i class="fas fa-print"></i>
+                                        </a>
                                         <form action="{{ route('orcamentos.approve', $orcamento->id) }}" method="POST">
                                             @csrf
                                             <button type="submit" class="btn btn-sm btn-success" title="Aprovar">

@@ -52,6 +52,8 @@ Route::get('/ordem-servico/{id}/pdf', [OrdemServicoController::class, 'gerarPdf'
 //Rotas para orçamento
 Route::resource('orcamentos', OrcamentoController::class)->except(['edit', 'update']);
 Route::post('/orcamentos/{orcamento}/approve', [OrcamentoController::class, 'approve'])->name('orcamentos.approve');
+Route::get('/orcamentos/{orcamento}/pdf', [OrcamentoController::class, 'gerarPdf'])->name('orcamentos.pdf');
+
 
 // Rotas para Relatórios
 Route::get('/relatorios/servicos', [RelatorioController::class, 'servicos'])->name('relatorios.servicos');

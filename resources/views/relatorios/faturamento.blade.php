@@ -8,6 +8,11 @@
         <div class="col-md-6">
             <h2 class="fw-bold mb-0">Relatório de Faturamento</h2>
         </div>
+        <div class="col-md-6 text-end">
+            <button class="btn btn-primary" onclick="window.print()">
+                <i class="fas fa-print me-2"></i> Imprimir
+            </button>
+        </div>
     </div>
 
     <x-card title="Filtros">
@@ -49,17 +54,46 @@
         </form>
     </x-card>
 
-    <x-card title="Resultados" class="mt-4">
+    <x-card title="Resumo do Faturamento" class="mt-4">
+        @if($faturamentoPorMes->isNotEmpty())
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card border-0 bg-light">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-muted">Total em Peças</h5>
+                        <h3 class="text-primary">@money($faturamentoPorMes->sum('total_pecas'))</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 bg-light">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-muted">Total em Mão de Obra</h5>
+                        <h3 class="text-primary">@money($faturamentoPorMes->sum('total_mao_de_obra'))</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 bg-light">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-muted">Faturamento Total</h5>
+                        <h3 class="text-success">@money($faturamentoPorMes->sum('total_geral'))</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
         <div class="table-responsive">
-            <table class="table table-custom table-hover">
-                <thead>
+            <table class="table table-hover table-striped">
+                <thead class="table-light">
                     <tr>
                         <th>Mês/Ano</th>
                         <th class="text-end">Peças (R$)</th>
                         <th class="text-end">Mão de Obra (R$)</th>
                         <th class="text-end">Total (R$)</th>
                         <th class="text-end">Serviços</th>
-                        <th class="text-end">Detalhes</th>
+                        <th class="text-center">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -70,97 +104,58 @@
                             <td class="text-end">@money($item['total_mao_de_obra'])</td>
                             <td class="text-end fw-bold text-success">@money($item['total_geral'])</td>
                             <td class="text-end">{{ $item['quantidade_servicos'] }}</td>
-                            <td class="text-end">
+                            <td class="text-center">
                                 <a href="{{ route('relatorios.faturamento.detalhes', ['ano' => $item['ano'], 'mes' => $item['mes']]) }}" 
-                                   class="btn btn-sm btn-info">
-                                    <i class="fas fa-search"></i>
+                                   class="btn btn-sm btn-primary" title="Ver Detalhes">
+                                    <i class="fas fa-eye"></i>
                                 </a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center">Nenhum registro encontrado</td>
+                            <td colspan="6" class="text-center py-4">Nenhum registro encontrado para o período selecionado</td>
                         </tr>
                     @endforelse
                 </tbody>
+                @if($faturamentoPorMes->isNotEmpty())
+                <tfoot class="table-light">
+                    <tr>
+                        <th>Total Geral</th>
+                        <th class="text-end">@money($faturamentoPorMes->sum('total_pecas'))</th>
+                        <th class="text-end">@money($faturamentoPorMes->sum('total_mao_de_obra'))</th>
+                        <th class="text-end text-success">@money($faturamentoPorMes->sum('total_geral'))</th>
+                        <th class="text-end">{{ $faturamentoPorMes->sum('quantidade_servicos') }}</th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+                @endif
             </table>
-        </div>
-    </x-card>
-
-    <x-card title="Gráfico de Faturamento" class="mt-4">
-        <div class="chart-container" style="position: relative; height: 400px;">
-            <canvas id="faturamentoChart"></canvas>
         </div>
     </x-card>
 </div>
 
-@push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const ctx = document.getElementById('faturamentoChart').getContext('2d');
-        const dados = @json($faturamentoPorMes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: dados.map(item => item.label),
-                datasets: [
-                    {
-                        label: 'Peças',
-                        data: dados.map(item => item.total_pecas),
-                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Mão de Obra',
-                        data: dados.map(item => item.total_mao_de_obra),
-                        backgroundColor: 'rgba(255, 99, 132, 0.7)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) label += ': ';
-                                if (context.parsed.y !== null) {
-                                    label += new Intl.NumberFormat('pt-BR', {
-                                        style: 'currency',
-                                        currency: 'BRL'
-                                    }).format(context.parsed.y);
-                                }
-                                return label;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return new Intl.NumberFormat('pt-BR', {
-                                    style: 'currency',
-                                    currency: 'BRL'
-                                }).format(value);
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    });
-</script>
-@endpush
+<style>
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+        .card, .card * {
+            visibility: visible;
+        }
+        .card {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            border: none;
+            box-shadow: none;
+        }
+        .no-print {
+            display: none !important;
+        }
+        .table {
+            width: 100% !important;
+        }
+    }
+</style>
 @endsection

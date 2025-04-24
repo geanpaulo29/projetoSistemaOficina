@@ -6,10 +6,20 @@ use App\Models\Orcamento;
 use App\Models\Servico;
 use App\Models\Veiculo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class OrcamentoController extends Controller
 {
+
+    public function gerarPdf($id)
+    {
+        $orcamento = Orcamento::with(['cliente', 'veiculo'])->findOrFail($id);
+        
+        $pdf = Pdf::loadView('orcamentos.pdf', compact('orcamento'));
+        
+        return $pdf->stream('orcamento-'.$orcamento->id.'.pdf');
+    }
     public function create()
     {
         $veiculos = Veiculo::with('cliente')->get();
@@ -26,7 +36,7 @@ class OrcamentoController extends Controller
             'itens.*.nome' => 'required|string',
             'itens.*.quantidade' => 'required|numeric|min:1',
             'itens.*.valor_unitario' => 'required|numeric|min:0',
-            'validade' => 'required|date|after_or_equal:today'
+            'validade' => 'required|date'
         ]);
 
         $itens = collect($request->itens)->map(function ($item) {
