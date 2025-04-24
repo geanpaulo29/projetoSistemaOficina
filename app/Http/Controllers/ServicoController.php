@@ -52,10 +52,10 @@ class ServicoController extends Controller
     
         return redirect()->route('servicos.index')->with('success', 'Serviço cadastrado com sucesso!');
     }
-    public function detalhes($id)
+    public function show($id)
     {
         $servico = Servico::with(['veiculo.cliente'])->findOrFail($id);
-        return view('servicos.detalhes', compact('servico'));
+        return view('servicos.show', compact('servico'));
     }
 
     // Lista todos os serviços com paginação e filtros

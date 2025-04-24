@@ -35,15 +35,17 @@ Route::put('/veiculos/{id}', [VeiculoController::class, 'update'])->name('veicul
 Route::delete('/veiculos/{id}', [VeiculoController::class, 'destroy'])->name('veiculos.destroy');
 
 // Rotas para Serviços
-Route::get('/servicos', [ServicoController::class, 'index'])->name('servicos.index');
-Route::get('/servicos/create', [ServicoController::class, 'create'])->name('servicos.create');
-Route::post('/servicos', [ServicoController::class, 'store'])->name('servicos.store');
-Route::get('/servicos/search', [ServicoController::class, 'search'])->name('servicos.search');
-Route::get('/servicos/find', [ServicoController::class, 'find'])->name('servicos.find');
-Route::get('/servicos/{id}/edit', [ServicoController::class, 'edit'])->name('servicos.edit');
-Route::put('/servicos/{id}', [ServicoController::class, 'update'])->name('servicos.update');
-Route::delete('/servicos/{id}', [ServicoController::class, 'destroy'])->name('servicos.destroy');
-Route::get('/servicos/{id}/detalhes', [ServicoController::class, 'detalhes'])->name('servicos.detalhes');
+Route::prefix('servicos')->group(function() {
+    Route::get('/', [ServicoController::class, 'index'])->name('servicos.index');
+    Route::get('/create', [ServicoController::class, 'create'])->name('servicos.create');
+    Route::post('/', [ServicoController::class, 'store'])->name('servicos.store');
+    Route::get('/{servico}', [ServicoController::class, 'show'])->name('servicos.show'); // Rota para detalhes
+    Route::get('/{servico}/edit', [ServicoController::class, 'edit'])->name('servicos.edit');
+    Route::put('/{servico}', [ServicoController::class, 'update'])->name('servicos.update');
+    Route::delete('/{servico}', [ServicoController::class, 'destroy'])->name('servicos.destroy');
+});
+
+// Mantenha separadas as rotas de ordem de serviço
 Route::get('/ordem-servico/{id}', [ServicoController::class, 'gerarOrdemServico'])->name('ordem-servico.show');
 Route::get('/ordem-servico/{id}/pdf', [OrdemServicoController::class, 'gerarPdf'])->name('ordem-servico.pdf');
 

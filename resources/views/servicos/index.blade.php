@@ -95,6 +95,10 @@
                                 </td>
                                 <td class="text-end">
                                     <div class="d-flex justify-content-end gap-2">
+                                        <a href="{{ route('servicos.show', $servico->id) }}" 
+                                           class="btn btn-sm btn-primary" title="Ver Detalhes">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
                                         <a href="{{ route('ordem-servico.pdf', $servico->id) }}" 
                                            class="btn btn-sm btn-info" title="Gerar PDF">
                                             <i class="fas fa-file-pdf"></i>

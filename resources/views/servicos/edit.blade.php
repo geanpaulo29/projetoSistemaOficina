@@ -3,92 +3,138 @@
 @section('title', 'Editar Serviço')
 
 @section('content')
-<div class="container">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">Editar Serviço #{{ $servico->id }}</h4>
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2 class="fw-bold mb-0">Editar Serviço #{{ $servico->id }}</h2>
         </div>
-        <div class="card-body">
-            <form action="{{ route('servicos.update', $servico->id) }}" method="POST">
-                @csrf
-                @method('PUT')
-
-                <div class="mb-3">
-                    <label for="veiculo_id" class="form-label">Veículo</label>
-                    <select class="form-control" id="veiculo_id" name="veiculo_id" required>
-                        @foreach($veiculos as $veiculo)
-                            <option value="{{ $veiculo->id }}" {{ $servico->veiculo_id == $veiculo->id ? 'selected' : '' }}>
-                                {{ $veiculo->placa }} - {{ $veiculo->modelo }} ({{ $veiculo->cliente->nome }})
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label for="descricao" class="form-label">Descrição do Serviço</label>
-                    <textarea class="form-control" id="descricao" name="descricao" rows="3" required>{{ $servico->descricao }}</textarea>
-                </div>
-
-                <!-- Itens do Serviço (Dinâmico) -->
-                <div class="mb-3">
-                    <label class="form-label">Peças Utilizadas</label>
-                    <div id="itens-container">
-                        @foreach($servico->itens as $index => $item)
-                            <div class="item row mb-2 g-2">
-                                <div class="col-md-5">
-                                    <input type="text" class="form-control" name="itens[{{ $index }}][nome]" 
-                                           value="{{ $item['nome'] }}" placeholder="Nome da peça" required>
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="number" class="form-control" name="itens[{{ $index }}][quantidade]" 
-                                           value="{{ $item['quantidade'] }}" placeholder="Qtd" min="1" required>
-                                </div>
-                                <div class="col-md-3">
-                                    <input type="number" step="0.01" class="form-control" 
-                                           name="itens[{{ $index }}][valor_unitario]" 
-                                           value="{{ $item['valor_unitario'] }}" placeholder="Valor unitário" min="0" required>
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-danger btn-remover-item w-100">×</button>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                    <button type="button" id="btn-adicionar-item" class="btn btn-sm btn-success mt-2">
-                        <i class="fas fa-plus"></i> Adicionar Peça
-                    </button>
-                </div>
-
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="valor_mao_de_obra" class="form-label">Mão de Obra (R$)</label>
-                        <input type="number" step="0.01" class="form-control" id="valor_mao_de_obra" 
-                               name="valor_mao_de_obra" value="{{ $servico->valor_mao_de_obra }}" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="valor_total" class="form-label">Total (R$)</label>
-                        <input type="number" step="0.01" class="form-control bg-light" id="valor_total" 
-                               name="valor_total" value="{{ $servico->valor_total }}" readonly>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="data_servico" class="form-label">Data do Serviço</label>
-                    <input type="date" class="form-control" id="data_servico" 
-                           name="data_servico" value="{{ $servico->data_servico->format('Y-m-d') }}" required>
-                </div>
-
-                <div class="d-flex justify-content-between">
-                    <a href="{{ route('servicos.index') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> Cancelar
-                    </a>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Atualizar Serviço
-                    </button>
-                </div>
-            </form>
+        <div class="col-md-6 text-end">
+            <a href="{{ route('servicos.index') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-2"></i> Voltar
+            </a>
         </div>
     </div>
+
+    <x-card title="Dados do Serviço">
+        <form action="{{ route('servicos.update', $servico->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+
+            <div class="row g-3">
+                <!-- Coluna Esquerda -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="veiculo_id" class="form-label">Veículo</label>
+                        <select class="form-select @error('veiculo_id') is-invalid @enderror" 
+                                id="veiculo_id" name="veiculo_id" required>
+                            @foreach($veiculos as $veiculo)
+                                <option value="{{ $veiculo->id }}" {{ $servico->veiculo_id == $veiculo->id ? 'selected' : '' }}>
+                                    {{ $veiculo->placa }} - {{ $veiculo->modelo }} ({{ $veiculo->cliente->nome }})
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('veiculo_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descricao" class="form-label">Descrição do Serviço</label>
+                        <textarea class="form-control @error('descricao') is-invalid @enderror" 
+                                  id="descricao" name="descricao" rows="3" required>{{ old('descricao', $servico->descricao) }}</textarea>
+                        @error('descricao')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="data_servico" class="form-label">Data do Serviço</label>
+                        <input type="date" class="form-control @error('data_servico') is-invalid @enderror" 
+                               id="data_servico" name="data_servico" 
+                               value="{{ old('data_servico', $servico->data_servico->format('Y-m-d')) }}" required>
+                        @error('data_servico')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Coluna Direita -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">Peças Utilizadas</label>
+                        <div id="itens-container">
+                            @foreach($servico->itens as $index => $item)
+                                <div class="item row mb-2 g-2">
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control @error('itens.'.$index.'.nome') is-invalid @enderror" 
+                                               name="itens[{{ $index }}][nome]" 
+                                               value="{{ old('itens.'.$index.'.nome', $item['nome']) }}" 
+                                               placeholder="Nome da peça" required>
+                                        @error('itens.'.$index.'.nome')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="number" class="form-control @error('itens.'.$index.'.quantidade') is-invalid @enderror" 
+                                               name="itens[{{ $index }}][quantidade]" 
+                                               value="{{ old('itens.'.$index.'.quantidade', $item['quantidade']) }}" 
+                                               placeholder="Qtd" min="1" required>
+                                        @error('itens.'.$index.'.quantidade')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="number" step="0.01" class="form-control @error('itens.'.$index.'.valor_unitario') is-invalid @enderror" 
+                                               name="itens[{{ $index }}][valor_unitario]" 
+                                               value="{{ old('itens.'.$index.'.valor_unitario', $item['valor_unitario']) }}" 
+                                               placeholder="Valor unitário" min="0" required>
+                                        @error('itens.'.$index.'.valor_unitario')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-danger btn-remover-item w-100">×</button>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <button type="button" id="btn-adicionar-item" class="btn btn-sm btn-success mt-2">
+                            <i class="fas fa-plus"></i> Adicionar Peça
+                        </button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="valor_mao_de_obra" class="form-label">Mão de Obra (R$)</label>
+                        <input type="number" step="0.01" class="form-control @error('valor_mao_de_obra') is-invalid @enderror" 
+                               id="valor_mao_de_obra" name="valor_mao_de_obra" 
+                               value="{{ old('valor_mao_de_obra', $servico->valor_mao_de_obra) }}" required>
+                        @error('valor_mao_de_obra')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="valor_total" class="form-label">Total (R$)</label>
+                        <input type="number" step="0.01" class="form-control bg-light" 
+                               id="valor_total" name="valor_total" 
+                               value="{{ old('valor_total', $servico->valor_total) }}" readonly>
+                    </div>
+                </div>
+
+                <!-- Botões -->
+                <div class="col-12 mt-4">
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="reset" class="btn btn-secondary">
+                            <i class="fas fa-eraser me-2"></i> Limpar
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i> Atualizar Serviço
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </x-card>
 </div>
 
 <script>
@@ -143,6 +189,9 @@
         // Atualiza o total quando os campos mudam
         itensContainer.addEventListener('input', calcularTotal);
         document.getElementById('valor_mao_de_obra').addEventListener('input', calcularTotal);
+        
+        // Calcula o total inicial
+        calcularTotal();
     });
 </script>
 @endsection

@@ -78,7 +78,7 @@
                 <div class="card-body overflow-auto" style="max-height: 320px">
                     <div class="list-group">
                         @forelse($ultimosServicos as $servico)
-                        <a href="{{ route('servicos.detalhes', $servico->id) }}" class="list-group-item list-group-item-action">
+                        <a href="{{ route('servicos.show', $servico->id) }}" class="list-group-item list-group-item-action">
                             <div class="d-flex w-100 justify-content-between">
                                 <h6 class="mb-1">{{ $servico->veiculo->modelo }} ({{ $servico->veiculo->placa }})</h6>
                                 <small>{{ $servico->data_servico->format('d/m/Y') }}</small>
